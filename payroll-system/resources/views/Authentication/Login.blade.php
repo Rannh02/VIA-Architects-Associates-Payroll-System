@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/login style/login.css') }}">
 
 </head>
 <body>
@@ -24,8 +24,7 @@
                     <span>VIA ARCHITECTS ASSOCIATES</span>
                 </div>
 
-
-                <p class="brand-subtitle">Payroll Management System</p>
+                <p class="brand-subtitle">Payroll Management</p>
             </div>
 
             <form action="{{ route('login') }}" method="POST">
@@ -37,7 +36,7 @@
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="name@email.com" required autofocus>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="email@via-architect.com" required autofocus>
                     </div>
                 </div>
 

@@ -25,6 +25,14 @@ Route::post('/password-email', function () {
 Route::post('/login', function () {
     return "Login POST Placeholder";
 });
+Route::get('/dashboard', function () {
+    return view('Dashboard.index');
+})->name('dashboard');
 
+Route::get('/employees/create', function () {
+    return view('Employees.create');
+})->name('employees.create');
 
-
+Route::get('/profile/settings', function () {
+    return view('Profile.settings');
+})->name('profile.settings');
