@@ -13,6 +13,15 @@
 
     <link rel="stylesheet" href="{{ asset('css/login style/login.css') }}">
 
+    <!-- Theme Initialization Script -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
 </head>
 <body>
     <div class="bg-overlay"></div>

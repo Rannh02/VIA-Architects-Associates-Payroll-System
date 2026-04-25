@@ -17,6 +17,16 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
     @yield('styles')
+
+    <!-- Theme Initialization Script -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- Architectural Background Overlay -->
@@ -41,14 +51,14 @@
                     <button id="profile-btn" class="profile-trigger">
                         <div class="profile-avatar-gradient">
                             <div class="profile-avatar-inner">
-                                <img src="https://ui-avatars.com/api/?name=Admin+User&background=2dd4bf&color=0f172a" alt="User" class="h-full w-full object-cover">
+                                <img src="https://ui-avatars.com/api/?name=Admin+User&background=3b82f6&color=ffffff" alt="User" class="h-full w-full object-cover">
                             </div>
                         </div>
                         <div class="profile-info">
                             <p class="profile-name">Admin User</p>
                             <p class="profile-role">Administrator</p>
                         </div>
-                        <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 group-hover:text-teal-400 transition-colors"></i>
+                        <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 group-hover:text-blue-500 transition-colors"></i>
                     </button>
 
                     <!-- Dropdown Menu -->
@@ -58,9 +68,14 @@
                             <p class="dropdown-user-name">Ralph Administrator</p>
                         </div>
                         <a href="{{ route('profile.settings') }}" class="dropdown-item">
-                            <i data-lucide="user" class="h-4 w-4 text-slate-500 group-hover:text-teal-400"></i>
+                            <i data-lucide="user" class="h-4 w-4 text-slate-500 group-hover:text-blue-500"></i>
                             Profile Settings
                         </a>
+                        
+                        <button id="theme-toggle" class="dropdown-item">
+                            <i data-lucide="moon" class="h-4 w-4 text-slate-500 group-hover:text-blue-500 theme-icon"></i>
+                            <span class="theme-text">Dark Mode</span>
+                        </button>
                         
                         <div class="dropdown-divider"></div>
                         <form method="POST" action="#">

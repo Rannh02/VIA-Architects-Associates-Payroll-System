@@ -14,7 +14,7 @@
         </div>
         <div class="header-actions">
             <button class="btn-secondary">
-                <i data-lucide="calendar" class="h-4 w-4 text-teal-400"></i>
+                <i data-lucide="calendar" class="h-4 w-4 text-blue-500"></i>
                 Last 30 Days
             </button>
             <button class="btn-primary">

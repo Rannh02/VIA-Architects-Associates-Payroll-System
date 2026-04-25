@@ -21,12 +21,12 @@
             <div class="banner-avatar-section">
                 <div class="profile-avatar-gradient h-24 w-24">
                     <div class="profile-avatar-inner" style="border-radius: 1.25rem;">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=2dd4bf&color=0f172a" alt="User" class="h-full w-full object-cover">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=3b82f6&color=ffffff" alt="User" class="h-full w-full object-cover">
                     </div>
                 </div>
                 <div class="banner-text">
                     <div class="flex-items-center gap-2">
-                        <h3 class="text-2xl font-bold text-white">Ralph Administrator</h3>
+                        <h3 class="text-2xl font-bold text-main">Ralph Administrator</h3>
                         <span class="badge-teal text-[10px] px-2 py-0.5 rounded-full uppercase tracking-tighter">Verified Account</span>
                     </div>
                     <p class="text-slate-400 text-sm mt-1">Administrator since October 2023</p>

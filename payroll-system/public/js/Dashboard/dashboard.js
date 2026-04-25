@@ -61,5 +61,38 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isDropdownOpen) closeDropdown();
         });
     }
+    //=======================================================================================================================
+    // 4. Theme Toggle Logic
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.querySelector('.theme-icon');
+    const themeText = document.querySelector('.theme-text');
+
+    const updateThemeUI = (theme) => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+            if (themeIcon) themeIcon.setAttribute('data-lucide', 'sun');
+            if (themeText) themeText.textContent = 'Light Mode';
+        } else {
+            document.documentElement.classList.remove('dark-mode');
+            if (themeIcon) themeIcon.setAttribute('data-lucide', 'moon');
+            if (themeText) themeText.textContent = 'Dark Mode';
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    };
+
+    // Initialize UI on load based on current state
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    updateThemeUI(currentTheme);
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); // Keep dropdown open if desired, or let it close
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            const newTheme = isDark ? 'light' : 'dark';
+            
+            localStorage.setItem('theme', newTheme);
+            updateThemeUI(newTheme);
+        });
+    }
     //========================================================================================================================
 });
