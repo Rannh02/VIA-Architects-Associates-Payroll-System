@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Lucide failed to initialize:', e);
     }
 
-    // 2. Sidebar Toggle Logic
+    // 2. Sidebar Toggle Logic=============================================================================================
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebarTexts = document.querySelectorAll('.sidebar-text');
@@ -33,8 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    //=======================================================================================================================
 
-    // 3. Profile Dropdown Logic
+    // Profile Dropdown - Katung naay logout ug profile settings=============================================================
     const profileBtn = document.getElementById('profile-btn');
     const profileDropdown = document.getElementById('profile-dropdown');
     let isDropdownOpen = false;
@@ -55,9 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Close dropdown when clicking outside
+        // Click again dropdown cosed
         window.addEventListener('click', () => {
             if (isDropdownOpen) closeDropdown();
         });
     }
+    //========================================================================================================================
 });
