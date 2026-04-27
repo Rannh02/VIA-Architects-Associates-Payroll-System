@@ -1,8 +1,19 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
 :root {
     --primary: #2dd4bf;
     --primary-hover: #14b8a6;
+    /* Light Mode Defaults */
+    --bg-dark: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+}
+
+.dark-mode {
     --bg-dark: #0f172a;
     --card-bg: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.1);

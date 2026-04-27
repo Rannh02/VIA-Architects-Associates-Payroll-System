@@ -40,13 +40,11 @@
                 <!-- Profile Section with Dropdown -->
                 <div class="relative">
                     <button id="profile-btn" class="flex items-center gap-3 p-1 pr-3 rounded-xl hover:bg-white/5 transition-all group border border-transparent hover:border-white/10">
-                        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-teal-400 to-emerald-500 p-0.5 shadow-lg group-hover:scale-105 transition-transform">
-                            <div class="h-full w-full rounded-[10px] bg-slate-900 flex items-center justify-center overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name=Admin+User&background=2dd4bf&color=0f172a" alt="User" class="h-full w-full object-cover">
-                            </div>
+                        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 2px solid #3b82f6;">
+                            <img src="{{ Auth::user()->profile_photo_url }}" alt="User" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="hidden md:block text-left leading-none">
-                            <p class="text-sm font-bold text-white">Admin User</p>
+                            <p class="text-sm font-bold text-white">{{ Auth::user()->name }}</p>
                             <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">Administrator</p>
                         </div>
                         <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 group-hover:text-teal-400 transition-colors"></i>
@@ -56,7 +54,7 @@
                     <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 origin-top-right rounded-2xl bg-slate-900 p-2 shadow-2xl border border-white/10 hidden transform scale-95 opacity-0 transition-all duration-200 z-50">
                         <div class="px-4 py-3 border-b border-white/5 mb-1">
                             <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Account</p>
-                            <p class="text-sm font-bold text-white truncate mt-1">Ralph Administrator</p>
+                            <p class="text-sm font-bold text-white truncate mt-1">{{ Auth::user()->name }}</p>
                         </div>
                         <a href="#" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 rounded-xl hover:bg-white/5 hover:text-teal-400 transition-all group">
                             <i data-lucide="user" class="h-4 w-4 text-slate-500 group-hover:text-teal-400"></i>

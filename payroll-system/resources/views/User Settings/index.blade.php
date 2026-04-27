@@ -1,16 +1,26 @@
 @extends('layouts.master')
 
-@section('title', 'Account Settings - VIA Architects Associates')
+@section('title', 'User Account Settings - VIA Architects Associates')
+
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/Profile/style.css') }}">
+<style>
+    /* User-specific overrides for settings */
+    .profile-settings-container {
+        padding-top: 2rem;
+    }
+</style>
+@endsection
 
 @section('content')
-<div class="max-w-5xl mx-auto">
+<div class="profile-settings-container">
     <!-- Header Section -->
     <div class="content-header" style="margin-bottom: 2rem;">
         <div>
-            <h2 class="header-title">Account Settings</h2>
+            <h2 class="header-title">User Account Settings</h2>
             <p class="header-subtitle">
                 <span class="subtitle-dot"></span>
-                Personalize your account and manage your security.
+                Manage your personal information and security.
             </p>
         </div>
     </div>
@@ -19,24 +29,27 @@
     <div class="settings-banner-card">
         <div class="banner-content">
             <div class="banner-avatar-section">
-                <div class="profile-avatar-gradient h-24 w-24">
-                    <div class="profile-avatar-inner" style="border-radius: 1.25rem;">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=3b82f6&color=ffffff" alt="User" class="h-full w-full object-cover">
+                <div class="profile-avatar-container">
+                    <div class="profile-avatar-circle">
+                        <img src="{{ Auth::user()->profile_photo_url }}" alt="User" class="profile-avatar-img">
                     </div>
+                    <button type="button" 
+                            onclick="document.getElementById('profile_photo_input').click()"
+                            class="profile-camera-btn">
+                        <i data-lucide="camera" class="profile-camera-icon"></i>
+                    </button>
+                    <form id="photo-upload-form" action="{{ route('profile.photo.update') }}" method="POST" enctype="multipart/form-data" style="display: none;">
+                        @csrf
+                        <input type="file" name="profile_photo" id="profile_photo_input" onchange="document.getElementById('photo-upload-form').submit()">
+                    </form>
                 </div>
                 <div class="banner-text">
                     <div class="flex-items-center gap-2">
-                        <h3 class="text-2xl font-bold text-main">Ralph Administrator</h3>
-                        <span class="badge-teal text-[10px] px-2 py-0.5 rounded-full uppercase tracking-tighter">Verified Account</span>
+                        <h3 class="user-name-title">{{ Auth::user()->name }}</h3>
+                        <span class="badge-teal verified-badge">Verified Employee</span>
                     </div>
-                    <p class="text-slate-400 text-sm mt-1">Administrator since October 2023</p>
+                    <p class="text-slate-400 text-sm mt-1">Employee since {{ Auth::user()->created_at->format('F Y') }}</p>
                 </div>
-            </div>
-            <div class="banner-actions">
-                <button class="btn-secondary">
-                    <i data-lucide="camera" class="h-4 w-4"></i>
-                    Update Photo
-                </button>
             </div>
         </div>
 
@@ -50,7 +63,6 @@
                 <i data-lucide="shield-check" class="h-4 w-4"></i>
                 Security
             </button>
-            
         </div>
     </div>
 
@@ -66,20 +78,20 @@
                         <div class="form-row-2">
                             <div class="form-group">
                                 <label class="form-label">First Name</label>
-                                <input type="text" class="form-input" value="Ralph">
+                                <input type="text" class="form-input" value="{{ explode(' ', Auth::user()->name)[0] }}">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" class="form-input" value="Administrator">
+                                <input type="text" class="form-input" value="{{ count(explode(' ', Auth::user()->name)) > 1 ? implode(' ', array_slice(explode(' ', Auth::user()->name), 1)) : '' }}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
-                            <input type="email" class="form-input" value="ralph@via-architects.com">
+                            <input type="email" class="form-input" value="{{ Auth::user()->email }}">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Employee ID</label>
-                            <input type="text" class="form-input" value="VIA-ADM-001" disabled>
+                            <input type="text" class="form-input" value="VIA-EMP-{{ str_pad(Auth::user()->id, 3, '0', STR_PAD_LEFT) }}" disabled>
                         </div>
                         <div class="form-actions-inline">
                             <button type="submit" class="btn-primary">Save Changes</button>
@@ -93,7 +105,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Biography</label>
-                        <textarea class="form-textarea" placeholder="Write a short bio...">Head of Payroll and Human Resources at VIA Architects Associates.</textarea>
+                        <textarea class="form-textarea" placeholder="Write a short bio...">Employee at VIA Architects Associates.</textarea>
                     </div>
                 </div>
             </div>
@@ -133,11 +145,8 @@
 @section('scripts')
 <script>
     function switchTab(tabId) {
-        // Remove active class from all tabs and panes
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-
-        // Add active class to selected tab and pane
         event.currentTarget.classList.add('active');
         document.getElementById(tabId + '-tab').classList.add('active');
     }

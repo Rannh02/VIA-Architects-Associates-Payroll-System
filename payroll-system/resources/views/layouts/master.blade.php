@@ -49,14 +49,12 @@
                 <!-- Profile Section -->
                 <div class="profile-container">
                     <button id="profile-btn" class="profile-trigger">
-                        <div class="profile-avatar-gradient">
-                            <div class="profile-avatar-inner">
-                                <img src="https://ui-avatars.com/api/?name=Admin+User&background=3b82f6&color=ffffff" alt="User" class="h-full w-full object-cover">
-                            </div>
+                        <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 2px solid #3b82f6;">
+                            <img src="{{ Auth::user()->profile_photo_url }}" alt="User" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div class="profile-info">
-                            <p class="profile-name">Admin User</p>
-                            <p class="profile-role">Administrator</p>
+                            <p class="profile-name">{{ Auth::user()->name }}</p>
+                            <p class="profile-role">{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Employee' }}</p>
                         </div>
                         <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 group-hover:text-blue-500 transition-colors"></i>
                     </button>
@@ -65,8 +63,16 @@
                     <div id="profile-dropdown" class="dropdown-menu">
                         <div class="dropdown-header">
                             <p class="dropdown-label">Account</p>
-                            <p class="dropdown-user-name">Ralph Administrator</p>
+                            <p class="dropdown-user-name">{{ Auth::user()->name }}</p>
                         </div>
+                        
+                        @if(Auth::user()->role === 'user')
+                        <a href="#" class="dropdown-item">
+                            <i data-lucide="calendar" class="h-4 w-4 text-slate-500 group-hover:text-blue-500"></i>
+                            View Attendance
+                        </a>
+                        @endif
+
                         <a href="{{ route('profile.settings') }}" class="dropdown-item">
                             <i data-lucide="user" class="h-4 w-4 text-slate-500 group-hover:text-blue-500"></i>
                             Profile Settings
@@ -78,7 +84,7 @@
                         </button>
                         
                         <div class="dropdown-divider"></div>
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="dropdown-logout">
                                 <i data-lucide="log-out" class="h-4 w-4 text-rose-400"></i>
@@ -92,33 +98,42 @@
 
         <div class="dashboard-wrapper">
             <!-- Shared Sidebar -->
+            @unless(isset($hideSidebar) && $hideSidebar)
             <aside id="sidebar" class="sidebar sidebar-expanded">
                 <nav class="sidebar-nav">
                     <button id="sidebar-toggle" class="sidebar-toggle-btn">
                         <i data-lucide="menu" class="h-6 w-6"></i>
                     </button>
 
-                    <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'sidebar-link-active' : '' }}">
-                        <i data-lucide="layout-dashboard" class="mr-3.5 h-5 w-5"></i>
-                        <span class="sidebar-text">Dashboard</span>
-                    </a>
+                    @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="layout-dashboard" class="mr-3.5 h-5 w-5"></i>
+                            <span class="sidebar-text">Admin Dashboard</span>
+                        </a>
 
-                    <a href="{{ route('employees.create') }}" class="sidebar-link {{ request()->routeIs('employees.create') ? 'sidebar-link-active' : '' }}">
-                        <i data-lucide="users" class="mr-3.5 h-5 w-5"></i>
-                        <span class="sidebar-text">Employees</span>
-                    </a>
+                        <a href="{{ route('employees.create') }}" class="sidebar-link {{ request()->routeIs('employees.create') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="users" class="mr-3.5 h-5 w-5"></i>
+                            <span class="sidebar-text">Employees</span>
+                        </a>
 
-                    <a href="#" class="sidebar-link">
-                        <i data-lucide="credit-card" class="mr-3.5 h-5 w-5"></i>
-                        <span class="sidebar-text">Payroll</span>
-                    </a>
+                        <a href="#" class="sidebar-link">
+                            <i data-lucide="credit-card" class="mr-3.5 h-5 w-5"></i>
+                            <span class="sidebar-text">Payroll</span>
+                        </a>
 
-                    <a href="#" class="sidebar-link">
-                        <i data-lucide="bar-chart-3" class="mr-3.5 h-5 w-5"></i>
-                        <span class="sidebar-text">Reports</span>
-                    </a>
+                        <a href="#" class="sidebar-link">
+                            <i data-lucide="bar-chart-3" class="mr-3.5 h-5 w-5"></i>
+                            <span class="sidebar-text">Reports</span>
+                        </a>
+                    @else
+                        <a href="{{ route('user.dashboard') }}" class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="layout-dashboard" class="mr-3.5 h-5 w-5"></i>
+                            <span class="sidebar-text">Dashboard</span>
+                        </a>
+                    @endif
                 </nav>
             </aside>
+            @endunless
 
             <!-- Main Content Area -->
             <main class="main-content">
@@ -128,7 +143,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/Dashboard/dashboard.js') }}"></script>
+    <script src="{{ asset('js/Admin Dashboard/dashboard.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

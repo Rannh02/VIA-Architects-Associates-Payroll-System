@@ -45,8 +45,11 @@
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="email@via-architect.com" required autofocus>
+                        <input type="email" id="email" name="email" class="form-input @error('email') is-invalid @enderror" placeholder="email@via-architect.com" value="{{ old('email') }}" required autofocus>
                     </div>
+                    @error('email')
+                        <span class="error-message" style="color: #f87171; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
@@ -56,8 +59,11 @@
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                             <path d="M7 11V7a5 5 0 0110 0v4"></path>
                         </svg>
-                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+                        <input type="password" id="password" name="password" class="form-input @error('password') is-invalid @enderror" placeholder="••••••••" required>
                     </div>
+                    @error('password')
+                        <span class="error-message" style="color: #f87171; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-options">

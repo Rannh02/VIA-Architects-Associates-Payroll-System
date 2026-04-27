@@ -1,0 +1,240 @@
+/* User Dashboard Style Guide */
+.main-content-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.content-header {
+    margin-bottom: 3rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    margin: 0;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-top: 0;
+}
+
+@media (min-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 2fr 1.2fr;
+    }
+}
+
+.dashboard-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.payroll-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin: 0;
+}
+
+.payroll-header {
+    background: #0f172a;
+    padding: 2.5rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-label {
+    color: #2dd4bf;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+.btn-view-payroll {
+    background: white;
+    color: #0f172a;
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-view-payroll:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+}
+
+.payroll-body {
+    padding: 2.5rem;
+}
+
+.payroll-summary {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .payroll-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.summary-item {
+    padding: 2rem;
+    background: var(--bg-dark);
+    border-radius: 1.5rem;
+    border: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--slate-500);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.item-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Activity Table Styles */
+.activity-container {
+    margin: 0;
+    background: var(--bg-surface);
+    border-radius: 2rem;
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+}
+
+.activity-body {
+    padding: 2rem;
+}
+
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.activity-table th {
+    text-align: left;
+    font-size: 10px;
+    color: var(--slate-500);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 1rem;
+}
+
+.activity-table td {
+    padding: 1rem 0;
+    font-size: 0.875rem;
+    border-bottom: 1px solid rgba(0,0,0,0.02);
+}
+
+.td-date {
+    font-weight: 700;
+}
+
+/* Form Styles */
+.leave-form-container {
+    padding: 2rem;
+    background: var(--bg-surface);
+    border-radius: 2rem;
+    border: 1px solid var(--glass-border);
+    margin: 0;
+}
+
+.leave-form-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--text-main);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-select, .form-input, .form-textarea {
+    width: 100%;
+    padding: 0.875rem;
+    border-radius: 1rem;
+    border: 1px solid var(--glass-border);
+    background: var(--bg-dark);
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-select:focus, .form-input:focus, .form-textarea:focus {
+    border-color: #3b82f6;
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+/* Announcement Styles */
+.announcement-card {
+    height: auto !important;
+}
+
+.announcement-item {
+    padding-left: 1rem;
+    border-left: 3px solid #2dd4bf;
+}
+
+.announcement-title {
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.announcement-desc {
+    font-size: 12px;
+    color: var(--slate-500);
+    margin-top: 0.25rem;
+}
