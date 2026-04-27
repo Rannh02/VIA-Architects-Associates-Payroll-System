@@ -50,10 +50,7 @@
                 <i data-lucide="shield-check" class="h-4 w-4"></i>
                 Security
             </button>
-            <button class="tab-btn" onclick="switchTab('notifications')">
-                <i data-lucide="bell" class="h-4 w-4"></i>
-                Notifications
-            </button>
+            
         </div>
     </div>
 
