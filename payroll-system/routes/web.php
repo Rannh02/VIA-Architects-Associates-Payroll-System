@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/login', function () {
-    return view('Authentication.Login');
+    return view('auth.login');
 })->name('login');
 
 Route::get('/register', function () {
@@ -15,7 +15,7 @@ Route::get('/register', function () {
 })->name('register');
 
 Route::get('/password-reset', function () {
-    return view('Authentication.forgot-password');
+    return view('auth.forgot-password');
 })->name('password.request');
 
 Route::post('/password-email', function () {
@@ -49,22 +49,22 @@ Route::post('/login', function (Illuminate\Http\Request $request) {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('Admin Dashboard.index');
+        return view('admin.dashboard.index');
     })->name('dashboard');
 
     Route::get('/user-dashboard', function () {
-        return view('User Dashboard.index');
+        return view('user.dashboard.index');
     })->name('user.dashboard');
 
     Route::get('/employees/create', function () {
-        return view('Employees.create');
+        return view('admin.employees.create');
     })->name('employees.create');
 
     Route::get('/profile/settings', function () {
         if (Auth::user()->role === 'admin') {
-            return view('Admin Settings.index');
+            return view('admin.settings.index');
         }
-        return view('User Settings.index');
+        return view('user.settings.index');
     })->name('profile.settings');
 });
 

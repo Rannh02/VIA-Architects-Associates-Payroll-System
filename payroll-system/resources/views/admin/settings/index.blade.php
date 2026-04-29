@@ -3,7 +3,7 @@
 @section('title', 'Admin Account Settings - VIA Architects Associates')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/Profile/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/profile/style.css') }}">
 @endsection
 
 @section('content')
@@ -57,7 +57,6 @@
                 <i data-lucide="shield-check" class="h-4 w-4"></i>
                 Security
             </button>
-            
         </div>
     </div>
 
@@ -69,24 +68,25 @@
                     <div class="form-section-header">
                         <h3>Personal Details</h3>
                     </div>
-                    <form class="form-group-stack">
+                    <form action="#" method="POST" class="form-group-stack">
+                        @csrf
                         <div class="form-row-2">
                             <div class="form-group">
                                 <label class="form-label">First Name</label>
-                                <input type="text" class="form-input" value="{{ explode(' ', Auth::user()->name)[0] }}">
+                                <input type="text" name="first_name" class="form-input" value="{{ explode(' ', Auth::user()->name)[0] }}">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" class="form-input" value="{{ count(explode(' ', Auth::user()->name)) > 1 ? implode(' ', array_slice(explode(' ', Auth::user()->name), 1)) : '' }}">
+                                <input type="text" name="last_name" class="form-input" value="{{ count(explode(' ', Auth::user()->name)) > 1 ? implode(' ', array_slice(explode(' ', Auth::user()->name), 1)) : '' }}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
-                            <input type="email" class="form-input" value="{{ Auth::user()->email }}">
+                            <input type="email" name="email" class="form-input" value="{{ Auth::user()->email }}">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Employee ID</label>
-                            <input type="text" class="form-input" value="{{ Auth::user()->role === 'admin' ? 'VIA-ADM-001' : 'VIA-EMP-' . str_pad(Auth::user()->id, 3, '0', STR_PAD_LEFT) }}" disabled>
+                            <input type="text" class="form-input" value="VIA-ADM-001" disabled>
                         </div>
                         <div class="form-actions-inline">
                             <button type="submit" class="btn-primary">Save Changes</button>
@@ -100,7 +100,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Biography</label>
-                        <textarea class="form-textarea" placeholder="Write a short bio...">{{ Auth::user()->role === 'admin' ? 'Head of Payroll and Human Resources at VIA Architects Associates.' : 'Employee at VIA Architects Associates.' }}</textarea>
+                        <textarea class="form-textarea" placeholder="Write a short bio...">Head of Payroll and Human Resources at VIA Architects Associates.</textarea>
                     </div>
                 </div>
             </div>
@@ -113,18 +113,19 @@
                     <div class="form-section-header">
                         <h3>Update Password</h3>
                     </div>
-                    <form class="form-group-stack">
+                    <form action="#" method="POST" class="form-group-stack">
+                        @csrf
                         <div class="form-group">
                             <label class="form-label">Current Password</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="current_password" class="form-input" placeholder="••••••••">
                         </div>
                         <div class="form-group">
                             <label class="form-label">New Password</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="password" class="form-input" placeholder="••••••••">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Confirm New Password</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="password_confirmation" class="form-input" placeholder="••••••••">
                         </div>
                         <div class="form-actions-inline">
                             <button type="submit" class="btn-primary">Reset Password</button>
@@ -140,11 +141,8 @@
 @section('scripts')
 <script>
     function switchTab(tabId) {
-        // Remove active class from all tabs and panes
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-
-        // Add active class to selected tab and pane
         event.currentTarget.classList.add('active');
         document.getElementById(tabId + '-tab').classList.add('active');
     }

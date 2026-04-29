@@ -14,7 +14,8 @@
         </div>
     </div>
 
-    <form class="employee-form">
+    <form action="#" method="POST" class="employee-form">
+        @csrf
         <div class="form-grid">
             <!-- Left Column: Personal Info -->
             <div class="form-card">
@@ -25,45 +26,54 @@
                 <div class="form-group-stack">
                     <div class="form-group">
                         <label class="form-label">Name:</label>
-                        <input type="text" class="form-input" placeholder="Full Name">
+                        <input type="text" name="name" class="form-input @error('name') border-rose-500 @enderror" placeholder="Full Name" value="{{ old('name') }}">
+                        @error('name')
+                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-label">Employee Id:</label>
-                        <input type="text" class="form-input" placeholder="VIA-2024-XXX">
+                        <input type="text" name="employee_id" class="form-input @error('employee_id') border-rose-500 @enderror" placeholder="VIA-2024-XXX" value="{{ old('employee_id') }}">
+                        @error('employee_id')
+                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-label">Gender:</label>
-                        <select class="form-select">
+                        <select name="gender" class="form-select @error('gender') border-rose-500 @enderror">
                             <option selected disabled>Select Gender</option>
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Other</option>
+                            <option value="Male" {{ old('gender') === 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ old('gender') === 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="Other" {{ old('gender') === 'Other' ? 'selected' : '' }}>Other</option>
                         </select>
+                        @error('gender')
+                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-label">Contact Info:</label>
-                        <input type="text" class="form-input" placeholder="Phone Number">
+                        <input type="text" name="phone" class="form-input" placeholder="Phone Number" value="{{ old('phone') }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Address:</label>
-                        <input type="text" class="form-input" placeholder="Current Address">
+                        <input type="text" name="address" class="form-input" placeholder="Current Address" value="{{ old('address') }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">SSS Num:</label>
-                        <input type="text" class="form-input" placeholder="00-0000000-0">
+                        <input type="text" name="sss_num" class="form-input" placeholder="00-0000000-0" value="{{ old('sss_num') }}">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Philhealth Nu:</label>
-                        <input type="text" class="form-input" placeholder="00-000000000-0">
+                        <label class="form-label">Philhealth Num:</label>
+                        <input type="text" name="philhealth_num" class="form-input" placeholder="00-000000000-0" value="{{ old('philhealth_num') }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Join Date:</label>
-                        <input type="date" class="form-input">
+                        <input type="date" name="join_date" class="form-input" value="{{ old('join_date') }}">
                     </div>
                     
                     <div class="form-actions-inline">
-                        <button type="submit" class="btn-primary">Save</button>
-                        <button type="reset" class="btn-secondary">Clear</button>
+                        <button type="submit" class="btn-primary">Save Employee</button>
+                        <button type="reset" class="btn-secondary">Clear Form</button>
                     </div>
                 </div>
             </div>
@@ -90,15 +100,21 @@
                     <div class="form-group-stack">
                         <div class="form-group">
                             <label class="form-label">Email:</label>
-                            <input type="email" class="form-input" placeholder="email@via-architects.com">
+                            <input type="email" name="email" class="form-input @error('email') border-rose-500 @enderror" placeholder="email@via-architects.com" value="{{ old('email') }}">
+                            @error('email')
+                                <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Password:</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="password" class="form-input @error('password') border-rose-500 @enderror" placeholder="••••••••">
+                            @error('password')
+                                <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Confirm Password:</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="password_confirmation" class="form-input" placeholder="••••••••">
                         </div>
                     </div>
                 </div>

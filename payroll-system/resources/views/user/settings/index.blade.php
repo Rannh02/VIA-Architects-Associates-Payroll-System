@@ -3,13 +3,7 @@
 @section('title', 'User Account Settings - VIA Architects Associates')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/Profile/style.css') }}">
-<style>
-    /* User-specific overrides for settings */
-    .profile-settings-container {
-        padding-top: 2rem;
-    }
-</style>
+<link rel="stylesheet" href="{{ asset('css/profile/style.css') }}">
 @endsection
 
 @section('content')
@@ -74,20 +68,21 @@
                     <div class="form-section-header">
                         <h3>Personal Details</h3>
                     </div>
-                    <form class="form-group-stack">
+                    <form action="#" method="POST" class="form-group-stack">
+                        @csrf
                         <div class="form-row-2">
                             <div class="form-group">
                                 <label class="form-label">First Name</label>
-                                <input type="text" class="form-input" value="{{ explode(' ', Auth::user()->name)[0] }}">
+                                <input type="text" name="first_name" class="form-input" value="{{ explode(' ', Auth::user()->name)[0] }}">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" class="form-input" value="{{ count(explode(' ', Auth::user()->name)) > 1 ? implode(' ', array_slice(explode(' ', Auth::user()->name), 1)) : '' }}">
+                                <input type="text" name="last_name" class="form-input" value="{{ count(explode(' ', Auth::user()->name)) > 1 ? implode(' ', array_slice(explode(' ', Auth::user()->name), 1)) : '' }}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
-                            <input type="email" class="form-input" value="{{ Auth::user()->email }}">
+                            <input type="email" name="email" class="form-input" value="{{ Auth::user()->email }}">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Employee ID</label>
@@ -118,18 +113,19 @@
                     <div class="form-section-header">
                         <h3>Update Password</h3>
                     </div>
-                    <form class="form-group-stack">
+                    <form action="#" method="POST" class="form-group-stack">
+                        @csrf
                         <div class="form-group">
                             <label class="form-label">Current Password</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="current_password" class="form-input" placeholder="••••••••">
                         </div>
                         <div class="form-group">
                             <label class="form-label">New Password</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="password" class="form-input" placeholder="••••••••">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Confirm New Password</label>
-                            <input type="password" class="form-input" placeholder="••••••••">
+                            <input type="password" name="password_confirmation" class="form-input" placeholder="••••••••">
                         </div>
                         <div class="form-actions-inline">
                             <button type="submit" class="btn-primary">Reset Password</button>

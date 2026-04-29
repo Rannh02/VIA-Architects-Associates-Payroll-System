@@ -3,7 +3,7 @@
 @section('title', 'Employee Portal - VIA Architects Associates')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/User Dashboard/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/user/style.css') }}">
 @endsection
 
 @section('content')
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <!-- Stats Grid (Attendance from Wireframe - Professionalized) -->
+    <!-- Stats Grid -->
     <div class="stats-grid">
         @php
             $stats = [
@@ -115,10 +115,11 @@
         <div class="dashboard-column">
             <div class="leave-form-container">
                 <h3 class="leave-form-title">Leave Request</h3>
-                <form action="#" class="space-y-6">
+                <form action="#" method="POST" class="space-y-6">
+                    @csrf
                     <div class="form-group">
                         <label class="item-label">Leave Type</label>
-                        <select class="form-select">
+                        <select name="leave_type" class="form-select">
                             <option>Sick Leave</option>
                             <option>Vacation Leave</option>
                             <option>Emergency Leave</option>
@@ -127,18 +128,18 @@
                     <div class="form-row-2">
                         <div class="form-group">
                             <label class="item-label">Start Date</label>
-                            <input type="date" class="form-input">
+                            <input type="date" name="start_date" class="form-input">
                         </div>
                         <div class="form-group">
                             <label class="item-label">End Date</label>
-                            <input type="date" class="form-input">
+                            <input type="date" name="end_date" class="form-input">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="item-label">Reason</label>
-                        <textarea rows="4" class="form-textarea" placeholder="Details..."></textarea>
+                        <textarea name="reason" rows="4" class="form-textarea" placeholder="Details..."></textarea>
                     </div>
-                    <button class="btn-primary btn-full">Submit Request</button>
+                    <button type="submit" class="btn-primary btn-full">Submit Request</button>
                 </form>
             </div>
 
