@@ -56,6 +56,10 @@ Route::middleware(['auth'])->group(function () {
         return view('user.dashboard.index');
     })->name('user.dashboard');
 
+    Route::get('/attendance', function () {
+        return view('user.attendance.index');
+    })->name('user.attendance');
+
     Route::get('/employees/create', function () {
         return view('admin.employees.create');
     })->name('employees.create');

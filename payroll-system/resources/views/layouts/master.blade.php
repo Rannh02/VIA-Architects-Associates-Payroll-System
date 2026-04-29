@@ -122,7 +122,7 @@
                             <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
                             <span class="sidebar-text">Dashboard</span>
                         </a>
-                        <a href="#" class="sidebar-link">
+                        <a href="{{ route('user.attendance') }}" class="sidebar-link {{ request()->routeIs('user.attendance') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="calendar" class="h-5 w-5"></i>
                             <span class="sidebar-text">View Attendance</span>
                         </a>
