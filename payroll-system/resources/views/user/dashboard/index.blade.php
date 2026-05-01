@@ -62,7 +62,7 @@
                             <p class="section-label">Payroll Overview</p>
                             <h3 class="section-title">Financial Summary</h3>
                         </div>
-                        <button class="btn-view-payroll">
+                        <button id="btn-view-payroll" class="btn-view-payroll">
                             <i data-lucide="external-link" class="mr-2 h-4 w-4"></i>
                             View Payroll
                         </button>
@@ -81,76 +81,115 @@
                     </div>
                 </div>
 
-                <!-- Attendance Logs -->
-                <div class="activity-container">
-                    <div class="activity-header">
-                        <h3 class="activity-title">Attendance Logs</h3>
-                    </div>
-                    <div class="activity-body">
-                        <table class="activity-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Clock In</th>
-                                    <th>Clock Out</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="td-date">Apr 25, 2024</td>
-                                    <td>08:52 AM</td>
-                                    <td>06:12 PM</td>
-                                    <td><span class="badge-emerald">Ontime</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
             </div>
 
-            <!-- Sidebar Section -->
-            <div class="dashboard-column">
-                <div class="leave-form-container">
-                    <h3 class="leave-form-title">Leave Request</h3>
-                    <form action="#" method="POST" class="space-y-6">
-                        @csrf
-                        <div class="form-group">
-                            <label class="item-label">Leave Type</label>
-                            <select name="leave_type" class="form-select">
-                                <option>Sick Leave</option>
-                                <option>Vacation Leave</option>
-                                <option>Emergency Leave</option>
-                            </select>
-                        </div>
-                        <div class="form-row-2">
-                            <div class="form-group">
-                                <label class="item-label">Start Date</label>
-                                <input type="date" name="start_date" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label class="item-label">End Date</label>
-                                <input type="date" name="end_date" class="form-input">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="item-label">Reason</label>
-                            <textarea name="reason" rows="4" class="form-textarea" placeholder="Details..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary btn-full">Submit Request</button>
-                    </form>
-                </div>
 
-                <!-- Announcements -->
-                <div class="stat-card announcement-card">
-                    <h3 class="activity-title">Announcements</h3>
-                    <div class="announcement-item">
-                        <p class="item-label">Company News</p>
-                        <h4 class="announcement-title">Labor Day Holiday</h4>
-                        <p class="announcement-desc">Office will be closed on May 01.</p>
+        </div>
+    </div>
+
+    <!-- Payroll Summary Modal -->
+    <div id="payroll-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header modal-header-flex">
+                <h3 class="modal-title">Payroll Summary</h3>
+                <div class="modal-actions">
+                    <div class="form-group modal-filter-group">
+                        <input type="month" name="payroll_month" class="form-input filter-select" value="{{ date('Y-m') }}">
                     </div>
+                    <button id="btn-close-modal" class="modal-close">
+                        <i data-lucide="x" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-table-container">
+                    <table class="modal-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Basic Salary</th>
+                                <th>Over Time</th>
+                                <th>Absent & Late</th>
+                                <th>SSS</th>
+                                <th>PhilHealth</th>
+                                <th>Pag-Ibig</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example Static Rows based on wireframe -->
+                            <tr>
+                                <td>Regular Pay</td>
+                                <td>₱25,000</td>
+                                <td>₱1,500</td>
+                                <td>-₱500</td>
+                                <td>-₱1,125</td>
+                                <td>-₱500</td>
+                                <td>-₱100</td>
+                                <td>
+                                    <button class="btn-icon"><i data-lucide="eye" class="h-4 w-4"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Allowances</td>
+                                <td>₱5,000</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn-icon"><i data-lucide="eye" class="h-4 w-4"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="table-row-total">
+                                <td>Total</td>
+                                <td>₱30,000</td>
+                                <td>₱1,500</td>
+                                <td>-₱500</td>
+                                <td>-₱1,125</td>
+                                <td>-₱500</td>
+                                <td>-₱100</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('payroll-modal');
+            const openBtn = document.getElementById('btn-view-payroll');
+            const closeBtn = document.getElementById('btn-close-modal');
+
+            // Open modal
+            if (openBtn) {
+                openBtn.addEventListener('click', function () {
+                    modal.classList.add('show');
+                    // Re-initialize lucide icons for modal content
+                    lucide.createIcons();
+                });
+            }
+
+            // Close modal
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function () {
+                    modal.classList.remove('show');
+                });
+            }
+
+            // Close modal on click outside
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+    </script>
 @endsection

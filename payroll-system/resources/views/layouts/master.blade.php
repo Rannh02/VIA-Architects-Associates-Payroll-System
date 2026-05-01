@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,15 +13,15 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/common/dashboard.css') }}">
-    
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    
+
     @yield('styles')
 
     <!-- Theme Initialization Script -->
     <script>
-        (function() {
+        (function () {
             const theme = localStorage.getItem('theme') || 'light';
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark-mode');
@@ -28,6 +29,7 @@
         })();
     </script>
 </head>
+
 <body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
     <!-- Architectural Background Overlay -->
     <div class="bg-architectural-overlay"></div>
@@ -39,24 +41,26 @@
                 <div class="brand-logo-box">VIA</div>
                 <h1 class="brand-title">Architects Association</h1>
             </div>
-            
+
             <div class="nav-actions">
                 <button class="icon-btn">
                     <i data-lucide="bell" class="h-5 w-5"></i>
                     <span class="notification-dot"></span>
                 </button>
-                
+
                 <!-- Profile Section -->
                 <div class="profile-container">
                     <button id="profile-btn" class="profile-trigger">
                         <div class="profile-avatar-gradient">
                             <div class="profile-avatar-inner">
-                                <img src="{{ Auth::user()->profile_photo_url }}" alt="User" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="{{ Auth::user()->profile_photo_url }}" alt="User"
+                                    style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         </div>
                         <div class="profile-info">
                             <p class="profile-name">{{ Auth::user()->name }}</p>
-                            <p class="profile-role">{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Employee' }}</p>
+                            <p class="profile-role">{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Employee' }}
+                            </p>
                         </div>
                         <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 transition-colors"></i>
                     </button>
@@ -67,7 +71,7 @@
                             <p class="dropdown-label">Account</p>
                             <p class="dropdown-user-name">{{ Auth::user()->name }}</p>
                         </div>
-                        
+
                         <a href="{{ route('profile.settings') }}" class="dropdown-item">
                             <i data-lucide="user" class="h-4 w-4"></i>
                             Profile Settings
@@ -79,10 +83,11 @@
                         </button>
 
                         <div class="dropdown-divider"></div>
-                        
+
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="dropdown-item dropdown-logout" style="color: #f87171; width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                            <button type="submit" class="dropdown-item dropdown-logout"
+                                style="color: #f87171; width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
                                 <i data-lucide="log-out" class="h-4 w-4"></i>
                                 Log Out
                             </button>
@@ -101,11 +106,13 @@
                     </button>
 
                     @if(Auth::user()->role === 'admin')
-                        <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'sidebar-link-active' : '' }}">
+                        <a href="{{ route('dashboard') }}"
+                            class="sidebar-link {{ request()->routeIs('dashboard') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
                             <span class="sidebar-text">Dashboard</span>
                         </a>
-                        <a href="{{ route('employees.create') }}" class="sidebar-link {{ request()->routeIs('employees.create') ? 'sidebar-link-active' : '' }}">
+                        <a href="{{ route('employees.create') }}"
+                            class="sidebar-link {{ request()->routeIs('employees.create') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="users" class="h-5 w-5"></i>
                             <span class="sidebar-text">Employees</span>
                         </a>
@@ -118,13 +125,15 @@
                             <span class="sidebar-text">Reports</span>
                         </a>
                     @else
-                        <a href="{{ route('user.dashboard') }}" class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'sidebar-link-active' : '' }}">
+                        <a href="{{ route('user.dashboard') }}"
+                            class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
                             <span class="sidebar-text">Dashboard</span>
                         </a>
-                        <a href="{{ route('user.attendance') }}" class="sidebar-link {{ request()->routeIs('user.attendance') ? 'sidebar-link-active' : '' }}">
+                        <a href="{{ route('user.attendance') }}"
+                            class="sidebar-link {{ request()->routeIs('user.attendance') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="calendar" class="h-5 w-5"></i>
-                            <span class="sidebar-text">View Attendance</span>
+                            <span class="sidebar-text">Attendance</span>
                         </a>
                     @endif
                 </nav>
@@ -201,7 +210,7 @@
                     localStorage.setItem('theme', newTheme);
                     updateThemeUI(newTheme);
                 });
-                
+
                 // Initialize theme UI
                 updateThemeUI(localStorage.getItem('theme') || 'light');
             }
@@ -209,4 +218,5 @@
     </script>
     @yield('scripts')
 </body>
+
 </html>

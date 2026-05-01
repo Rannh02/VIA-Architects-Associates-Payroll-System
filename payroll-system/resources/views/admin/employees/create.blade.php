@@ -68,7 +68,7 @@
                             <div class="form-group">
                                 <label class="form-label">Sex:</label>
                                 <select name="sex" class="form-select @error('sex') border-rose-500 @enderror">
-                                    <option selected disabled>Select Sex</option>
+                                    <option selected disabled>Sex</option>
                                     <option value="Male" {{ old('sex') === 'Male' ? 'selected' : '' }}>Male</option>
                                     <option value="Female" {{ old('sex') === 'Female' ? 'selected' : '' }}>Female</option>
                                 </select>
@@ -103,8 +103,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">City/Municipality:</label>
-                                <input type="text" name="current_city" class="form-input" placeholder="Enter City/Municipality"
-                                    value="{{ old('current_city') }}">
+                                <input type="text" name="current_city" class="form-input"
+                                    placeholder="Enter City/Municipality" value="{{ old('current_city') }}">
                             </div>
                         </div>
 
@@ -140,8 +140,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">City/Municipality:</label>
-                                <input type="text" name="permanent_city" class="form-input" placeholder="Enter City/Municipality"
-                                    value="{{ old('permanent_city') }}">
+                                <input type="text" name="permanent_city" class="form-input"
+                                    placeholder="Enter City/Municipality" value="{{ old('permanent_city') }}">
                             </div>
                         </div>
 
@@ -239,31 +239,31 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sameAsCurrent = document.getElementById('same_as_current');
-        if (sameAsCurrent) {
-            sameAsCurrent.addEventListener('change', () => {
-                if (sameAsCurrent.checked) {
-                    const fields = ['street_address', 'barangay', 'city', 'province', 'zip_code'];
-                    fields.forEach(field => {
-                        const currentVal = document.querySelector(`[name="current_${field}"]`).value;
-                        document.querySelector(`[name="permanent_${field}"]`).value = currentVal;
-                    });
-                }
-            });
-
-            // Update permanent fields when current fields change, if checkbox is checked
-            const currentFields = ['street_address', 'barangay', 'city', 'province', 'zip_code'];
-            currentFields.forEach(field => {
-                const input = document.querySelector(`[name="current_${field}"]`);
-                input.addEventListener('input', () => {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sameAsCurrent = document.getElementById('same_as_current');
+            if (sameAsCurrent) {
+                sameAsCurrent.addEventListener('change', () => {
                     if (sameAsCurrent.checked) {
-                        document.querySelector(`[name="permanent_${field}"]`).value = input.value;
+                        const fields = ['street_address', 'barangay', 'city', 'province', 'zip_code'];
+                        fields.forEach(field => {
+                            const currentVal = document.querySelector(`[name="current_${field}"]`).value;
+                            document.querySelector(`[name="permanent_${field}"]`).value = currentVal;
+                        });
                     }
                 });
-            });
-        }
-    });
-</script>
+
+                // Update permanent fields when current fields change, if checkbox is checked
+                const currentFields = ['street_address', 'barangay', 'city', 'province', 'zip_code'];
+                currentFields.forEach(field => {
+                    const input = document.querySelector(`[name="current_${field}"]`);
+                    input.addEventListener('input', () => {
+                        if (sameAsCurrent.checked) {
+                            document.querySelector(`[name="permanent_${field}"]`).value = input.value;
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 @endsection
