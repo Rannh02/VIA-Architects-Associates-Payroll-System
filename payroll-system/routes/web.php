@@ -64,9 +64,17 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.employees.create');
     })->name('employees.create');
 
+    Route::get('/employees', function () {
+        return view('admin.employees.manage_employee');
+    })->name('employees.index');
+
+    Route::get('/payroll', function () {
+        return view('admin.employees.payroll_run');
+    })->name('payroll.index');
+
     Route::get('/profile/settings', function () {
         if (Auth::user()->role === 'admin') {
-            return view('admin.settings.index');
+            return view('admin.settings.payroll_run');
         }
         return view('user.settings.index');
     })->name('profile.settings');

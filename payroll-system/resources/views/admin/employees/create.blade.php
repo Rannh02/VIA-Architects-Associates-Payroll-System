@@ -78,10 +78,75 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Contact Number:</label>
-                            <input type="text" name="phone" class="form-input" placeholder="09XX-XXX-XXXX"
-                                value="{{ old('phone') }}">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label class="form-label">Contact Number:</label>
+                                <input type="text" name="phone" class="form-input" placeholder="09XX-XXX-XXXX"
+                                    value="{{ old('phone') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Date of Birth:</label>
+                                <input type="date" name="date_of_birth" class="form-input" value="{{ old('date_of_birth') }}">
+
+                            </div>
+                        </div>
+
+                        <div class="form-row-2">
+                            <div class="form-froup">
+                                <lable class="form-label">Marital Status:</lable>
+                                <select name="marital_status" class="form-select">
+                                    <option value="" disabled selected>Select Marital Status</option>
+                                    <option value="Single" {{ old('marital_status') === 'Single' ? 'selected' : '' }}>Single</option>
+                                    <option value="Married" {{ old('marital_status') === 'Married' ? 'selected' : '' }}>Married</option>
+                                    <option value="Widowed" {{ old('marital_status') === 'Widowed' ? 'selected' : '' }}>Widowed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Number of Dependents:</label>
+                                <input type="number" name="dependents" class="form-input" placeholder="Enter Number of Dependents" value="{{ old('dependents') }}">
+                            </div>
+                        </div>
+
+                        <div class ="form-row-2">
+                            <div class="form-group">
+                                <label class="form-label">Basic Salary</label>
+                                <input type="number" name="salary" class="form-input" placeholder="Enter Basic Salary">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Position</label>
+                                <select name="position" class="form-select">
+                                    <option value="" disabled selected>Select Position</option>
+                                    <option value="Engineer" {{ old('position') === 'Engineer' ? 'selected' : '' }}>Engineer</option>
+                                    <option value="Manager" {{ old('position') === 'Manager' ? 'selected' : '' }}>Manager</option>
+                                    <option value="Supervisor" {{ old('position') === 'Supervisor' ? 'selected' : '' }}>Supervisor</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <select name="department" class="form-select">
+                                    <option value="" disabled selected>Select Department</option>
+                                    <option value = "Architecture" {{ old('department') === 'Architecture' ? 'selected' : '' }}>Architecture</option>
+                                    <option value = "Interior Design" {{ old('department') === 'Interior Design' ? 'selected' : '' }}>Interior Design</option>
+                                    <option value = "Project Management" {{ old('department') === 'Project Management' ? 'selected' : '' }}>Project Management
+                                    <option value = "Site Construction" {{ old('department') === 'Site Construction' ? 'selected' : '' }}>Site Construction</option>    
+                                </select> 
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Employee Status</label>
+                                <select name="employee_status" class="form-select">
+                                    <option value="" disabled selected>Select Employee Status</option>
+                                    <option value="Regular" {{ old('employee_status') === 'Regular' ? 'selected' : '' }}>Regular</option>
+                                    <option value="Probationary" {{ old('employee_status') === 'Probationary' ? 'selected' : '' }}>Probationary</option>
+                                    <option value="Contractual" {{ old('employee_status') === 'Contractual' ? 'selected' : '' }}>Contractual</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Current Address Section -->
@@ -165,22 +230,30 @@
 
                         <div class="form-row-2">
                             <div class="form-group">
-                                <label class="form-label">SSS Num:</label>
+                                <label class="form-label">SSS Number:</label>
                                 <input type="text" name="sss_num" class="form-input" placeholder="00-0000000-0"
                                     value="{{ old('sss_num') }}">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Philhealth Num:</label>
+                                <label class="form-label">Philhealth Number:</label>
                                 <input type="text" name="philhealth_num" class="form-input" placeholder="00-000000000-0"
                                     value="{{ old('philhealth_num') }}">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Join Date:</label>
-                            <input type="date" name="join_date" class="form-input" value="{{ old('join_date') }}">
+                        <div class ="form-row-2">
+                            <div class="form-group">
+                                <label class="form-label">Pag-ibig</label>
+                                <input type="text" name="pagibig_num" class="form-input" placeholder="0000-0000-0000"
+                                    value="{{ old('pagibig_num') }}">
+                            </div>
+                        
+                            <div class="form-group">
+                                <label class="form-label">Join Date:</label>
+                                <input type="date" name="join_date" class="form-input" value="{{ old('join_date') }}">
+                            </div>
                         </div>
-
+                    
                         <div class="form-actions-inline">
                             <button type="submit" class="btn-primary">Save Employee</button>
                             <button type="reset" class="btn-secondary">Clear Form</button>

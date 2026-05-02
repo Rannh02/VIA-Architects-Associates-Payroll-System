@@ -114,12 +114,21 @@
                         <a href="{{ route('employees.create') }}"
                             class="sidebar-link {{ request()->routeIs('employees.create') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="users" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Employees</span>
+                            <span class="sidebar-text">Add Employees</span>
                         </a>
-                        <a href="#" class="sidebar-link">
+
+                        <a href="{{ route('employees.index') }}"
+                            class="sidebar-link {{ request()->routeIs('employees.index') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="user-check" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Manage Employees</span>
+                        </a>
+
+                        <a href="{{ route('payroll.index') }}"
+                            class="sidebar-link {{ request()->routeIs('payroll.index') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="banknote" class="h-5 w-5"></i>
                             <span class="sidebar-text">Payroll</span>
                         </a>
+    
                         <a href="#" class="sidebar-link">
                             <i data-lucide="file-bar-chart" class="h-5 w-5"></i>
                             <span class="sidebar-text">Reports</span>
