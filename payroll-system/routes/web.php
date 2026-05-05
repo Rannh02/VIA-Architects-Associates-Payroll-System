@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.dashboard.index');
     })->name('dashboard');
 
+    // route for user dashboard all in sidebar
     Route::get('/user-dashboard', function () {
         return view('user.dashboard.index');
     })->name('user.dashboard');
@@ -60,6 +61,16 @@ Route::middleware(['auth'])->group(function () {
         return view('user.attendance.index');
     })->name('user.attendance');
 
+    Route::get('/payslip', function () {
+        return view('user.payslip.payslip');
+    })->name('user.payslip');
+
+    Route::get('/leave_form', function () {
+        return view("user.leave_form.leave_form");
+    })->name('user.leave_form');
+
+
+    // route for admin dashboard all in sidebar
     Route::get('/employees/create', function () {
         return view('admin.employees.create');
     })->name('employees.create');
@@ -71,6 +82,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payroll', function () {
         return view('admin.employees.payroll_run');
     })->name('payroll.index');
+
+    Route::get('/approval_workflow', function () {
+        return view('admin.approval_workflow.approval_workflow');
+    })->name('approval_workflow.index');
+
+    Route::get('/reports', function (){
+        return view('admin.reports.reports');
+    })->name('reports.index');
 
     Route::get('/profile/settings', function () {
         if (Auth::user()->role === 'admin') {

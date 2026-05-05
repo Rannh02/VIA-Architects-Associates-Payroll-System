@@ -128,8 +128,15 @@
                             <i data-lucide="banknote" class="h-5 w-5"></i>
                             <span class="sidebar-text">Payroll</span>
                         </a>
-    
-                        <a href="#" class="sidebar-link">
+
+                        <a href="{{ route('approval_workflow.index')}}"
+                            class="sidebar-link {{ request()-> routeIs ('approval_workflow.index') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="calendar" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Approval Workflow</span>
+                        </a>
+
+                        <a href="{{ route('reports.index') }}"
+                            class="sidebar-link {{ request()->routeIs('reports.index') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="file-bar-chart" class="h-5 w-5"></i>
                             <span class="sidebar-text">Reports</span>
                         </a>
@@ -143,6 +150,18 @@
                             class="sidebar-link {{ request()->routeIs('user.attendance') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="calendar" class="h-5 w-5"></i>
                             <span class="sidebar-text">Attendance</span>
+                        </a>
+
+                        <a href="{{ route('user.payslip') }}"
+                            class="sidebar-link {{ request()->routeIs('user.payslip') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="file-text" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Payslip</span>
+                        </a>
+
+                        <a href="{{ route('user.leave_form') }}"
+                            class="sidebar-link {{ request()->routeIs('user.leave_form') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="calendar" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Leave Requests</span>
                         </a>
                     @endif
                 </nav>

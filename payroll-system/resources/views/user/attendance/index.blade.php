@@ -95,8 +95,8 @@
         </div>
 
         <!-- Lower Grid Section -->
-        <div class="dashboard-grid dashboard-grid-margin">
-            <!-- Attendance Logs -->
+        <!-- <div class="dashboard-grid dashboard-grid-margin">
+             Attendance Logs 
             <div class="dashboard-column" style="grid-column: span 3;">
                 <div class="activity-container">
                     <div class="activity-header">
@@ -125,9 +125,9 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <!-- Leave Form -->
+            <!-- Leave Form
             <div class="dashboard-column" style="grid-column: span 2;">
                 <div class="leave-form-container">
                     <h3 class="leave-form-title">Leave Request</h3>
@@ -160,10 +160,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Attendance Detail Modal -->
-    <div id="attendanceModal" class="modal-overlay">
+    <!-- <div id="attendanceModal" class="modal-overlay">
         <div class="modal-content">
             <button id="closeModal" class="modal-close">
                 <i data-lucide="x" class="h-5 w-5"></i>
@@ -181,9 +181,9 @@
                         <span id="modalDate">{{ date('F d, Y') }}</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="modal-table-container">
+            <!-- <div class="modal-table-container">
                 <table class="modal-table">
                     <thead>
                         <tr>
@@ -195,9 +195,9 @@
                             <th>Total Hours</th>
                         </tr>
                     </thead>
-                    <tbody id="modalTableBody">
+                    <tbody id="modalTableBody"> -->
                         <!-- Placeholder data -->
-                        <tr>
+                        <!-- <tr>
                             <td>{{ date('Y-m-d') }}</td>
                             <td>{{ date('l') }}</td>
                             <td>Morning Shift</td>
@@ -209,7 +209,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> -->
 
     @section('scripts')
         <script>
