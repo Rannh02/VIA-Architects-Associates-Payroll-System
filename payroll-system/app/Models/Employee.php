@@ -13,6 +13,7 @@ class Employee extends Model
         'position_id',
         'department_id',
         'created_by',
+        'user_id',
         
         // Personal Information
         'first_name',
@@ -43,6 +44,9 @@ class Employee extends Model
         'marital_status',
         'number_of_dependents',
         'spouse',
+        'sss_num',
+        'philhealth_num',
+        'pagibig_num'
     ];
 
     // Relationships
@@ -59,5 +63,15 @@ class Employee extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function getNameAttribute()
+    {
+        return trim("{$this->first_name} {$this->last_name}");
     }
 }

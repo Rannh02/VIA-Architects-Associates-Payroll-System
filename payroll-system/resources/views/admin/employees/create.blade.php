@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <form action="#" method="POST" class="employee-form">
+        <form action="{{ route('employees.store') }}" method="POST" class="employee-form">
             @csrf
             <div class="form-grid">
                 <!-- Left Column: Personal Info -->
@@ -119,9 +119,9 @@
                                 <label class="form-label">Position</label>
                                 <select name="position" class="form-select">
                                     <option value="" disabled selected>Select Position</option>
-                                    <option value="Engineer" {{ old('position') === 'Engineer' ? 'selected' : '' }}>Engineer</option>
-                                    <option value="Manager" {{ old('position') === 'Manager' ? 'selected' : '' }}>Manager</option>
-                                    <option value="Supervisor" {{ old('position') === 'Supervisor' ? 'selected' : '' }}>Supervisor</option>
+                                    @foreach($positions as $pos)
+                                        <option value="{{ $pos->position_id }}" {{ old('position') == $pos->position_id ? 'selected' : '' }}>{{ $pos->position_name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -131,10 +131,9 @@
                                 <label class="form-label">Department</label>
                                 <select name="department" class="form-select">
                                     <option value="" disabled selected>Select Department</option>
-                                    <option value = "Architecture" {{ old('department') === 'Architecture' ? 'selected' : '' }}>Architecture</option>
-                                    <option value = "Interior Design" {{ old('department') === 'Interior Design' ? 'selected' : '' }}>Interior Design</option>
-                                    <option value = "Project Management" {{ old('department') === 'Project Management' ? 'selected' : '' }}>Project Management
-                                    <option value = "Site Construction" {{ old('department') === 'Site Construction' ? 'selected' : '' }}>Site Construction</option>    
+                                    @foreach($departments as $dept)
+                                        <option value="{{ $dept->department_id }}" {{ old('department') == $dept->department_id ? 'selected' : '' }}>{{ $dept->department_name }}</option>
+                                    @endforeach
                                 </select> 
                             </div>
                             

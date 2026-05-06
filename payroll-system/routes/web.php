@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmployeeController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -71,13 +72,9 @@ Route::middleware(['auth'])->group(function () {
 
 
     // route for admin dashboard all in sidebar
-    Route::get('/employees/create', function () {
-        return view('admin.employees.create');
-    })->name('employees.create');
-
-    Route::get('/employees', function () {
-        return view('admin.employees.manage_employee');
-    })->name('employees.index');
+    Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
+    Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 
     Route::get('/payroll', function () {
         return view('admin.employees.payroll_run');

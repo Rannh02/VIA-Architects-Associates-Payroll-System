@@ -18,10 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('position_id')->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable(); // FK_User_id
+            $table->unsignedBigInteger('user_id')->nullable();
             
             $table->foreign('position_id')->references('position_id')->on('position')->onDelete('set null');
             $table->foreign('department_id')->references('department_id')->on('department')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 
             // Personal Information
             $table->string('first_name');
@@ -54,6 +56,9 @@ return new class extends Migration
             $table->string('marital_status')->nullable();
             $table->integer('number_of_dependents')->default(0);
             $table->string('spouse')->nullable();
+            $table->string('sss_num')->nullable();
+            $table->string('philhealth_num')->nullable();
+            $table->string('pagibig_num')->nullable();
 
             $table->timestamps();
         });
