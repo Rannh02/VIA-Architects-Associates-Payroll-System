@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\PositionController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -71,10 +73,21 @@ Route::middleware(['auth'])->group(function () {
     })->name('user.leave_form');
 
 
-    // route for admin dashboard all in sidebar
+   // route for employee controller
     Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+
+    // route for department controller
+    Route::get('/department/index', [DepartmentController::class, 'index'])->name('department.index');
+    Route::post('/department', [DepartmentController::class, 'store'])->name('department.store');
+    Route::delete('/department/{department}', [DepartmentController::class, 'destroy'])->name('department.destroy');
+
+    // route for position controller
+    Route::get('/positions/index', [PositionController::class, 'index'])->name('position.index');
+    Route::post('/positions', [PositionController::class, 'store'])->name('position.store');
+    Route::delete('/positions/{position}', [PositionController::class, 'destroy'])->name('position.destroy');
+
 
     Route::get('/payroll', function () {
         return view('admin.employees.payroll_run');

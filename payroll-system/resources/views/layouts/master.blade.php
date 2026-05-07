@@ -123,6 +123,18 @@
                             <span class="sidebar-text">Manage Employees</span>
                         </a>
 
+                        <a href="{{ route('department.index')}}"
+                            class="sidebar-link {{ request()->routeIs('department.index') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="briefcase" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Department</span>
+                        </a>
+
+                        <a href="{{ route('position.index')}}"
+                            class="sidebar-link {{ request()->routeIs('position.index') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="briefcase" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Position</span>
+                        </a>
+
                         <a href="{{ route('payroll.index') }}"
                             class="sidebar-link {{ request()->routeIs('payroll.index') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="banknote" class="h-5 w-5"></i>

@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('position', function (Blueprint $table) {
             $table->id('position_id');
+            $table->foreignId('department_id')->nullable()->constrained('department', 'department_id')->nullOnDelete();
             $table->string('position_name');
-            $table->decimal('basic_salary', 15, 2);
+            $table->string('position_code')->unique();
+            $table->string('description')->nullable();
+            $table->decimal('basic_salary', 15, 2)->default(0);
+            $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
     }

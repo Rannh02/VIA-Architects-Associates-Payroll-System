@@ -10,6 +10,9 @@ class Department extends Model
     protected $primaryKey = 'department_id';
 
     protected $fillable = [
+        'department_code',
         'department_name',
+        'description',
+        'status',
     ];
 }

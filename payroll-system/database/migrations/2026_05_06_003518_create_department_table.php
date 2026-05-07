@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('department', function (Blueprint $table) {
             $table->id('department_id');
-            $table->string('department_name');
+            $table->string('department_code', 20)->unique();
+            $table->string('department_name', 100);
+            $table->string('description', 255)->nullable();
+            $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
     }

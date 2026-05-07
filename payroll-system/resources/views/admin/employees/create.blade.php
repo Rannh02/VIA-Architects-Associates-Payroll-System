@@ -117,15 +117,25 @@
                         <div class="form-row-2">
                             <div class="form-group">
                                 <label class="form-label">Basic Salary</label>
-                                <input type="number" name="salary" class="form-input" placeholder="Enter Basic Salary">
+                                <input type="number" id="salary_input" name="salary" class="form-input"
+                                    placeholder="Auto-filled from position"
+                                    value="{{ old('salary') }}" readonly
+                                    style="background: var(--input-bg, #f9fafb); cursor: not-allowed; opacity: 0.85;">
+                                <!-- <small style="color: var(--text-muted, #6b7280); font-size: 0.75rem; margin-top: 4px; display:block;">
+                                    Salary is set by the selected position.
+                                </small> -->
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Position</label>
-                                <select name="position" class="form-select">
+                                <select id="position_select" name="position" class="form-select">
                                     <option value="" disabled selected>Select Position</option>
                                     @foreach($positions as $pos)
-                                        <option value="{{ $pos->position_id }}" {{ old('position') == $pos->position_id ? 'selected' : '' }}>{{ $pos->position_name }}</option>
+                                        <option value="{{ $pos->position_id }}"
+                                            data-salary="{{ $pos->basic_salary }}"
+                                            {{ old('position') == $pos->position_id ? 'selected' : '' }}>
+                                            {{ $pos->position_name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -319,6 +329,8 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Copy current address to permanent address ---
             const sameAsCurrent = document.getElementById('same_as_current');
             if (sameAsCurrent) {
                 sameAsCurrent.addEventListener('change', () => {
@@ -331,17 +343,36 @@
                     }
                 });
 
-                // Update permanent fields when current fields change, if checkbox is checked
+                // Also sync live while typing in current fields
                 const currentFields = ['street_address', 'barangay', 'city', 'province', 'zip_code'];
                 currentFields.forEach(field => {
                     const input = document.querySelector(`[name="current_${field}"]`);
-                    input.addEventListener('input', () => {
-                        if (sameAsCurrent.checked) {
-                            document.querySelector(`[name="permanent_${field}"]`).value = input.value;
-                        }
-                    });
+                    if (input) {
+                        input.addEventListener('input', () => {
+                            if (sameAsCurrent.checked) {
+                                document.querySelector(`[name="permanent_${field}"]`).value = input.value;
+                            }
+                        });
+                    }
                 });
             }
+
+            // --- Auto-fill Basic Salary from selected Position ---
+            const positionSelect = document.getElementById('position_select');
+            const salaryInput    = document.getElementById('salary_input');
+
+            function syncSalary() {
+                const selected = positionSelect.options[positionSelect.selectedIndex];
+                salaryInput.value = selected?.dataset?.salary ?? '';
+            }
+
+            if (positionSelect && salaryInput) {
+                positionSelect.addEventListener('change', syncSalary);
+                // Restore salary on validation re-open (old value present)
+                if (positionSelect.value) syncSalary();
+            }
+            // --- End salary auto-fill ---
+
         });
     </script>
 @endsection

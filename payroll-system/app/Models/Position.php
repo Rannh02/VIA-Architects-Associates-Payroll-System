@@ -10,7 +10,16 @@ class Position extends Model
     protected $primaryKey = 'position_id';
 
     protected $fillable = [
+        'department_id',
         'position_name',
-        'basic_salary'
+        'position_code',
+        'description',
+        'basic_salary',
+        'status',
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'department_id');
+    }
 }
