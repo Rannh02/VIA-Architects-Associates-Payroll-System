@@ -25,7 +25,7 @@ Route::post('/password-email', function () {
 
 Route::post('/login', function (Illuminate\Http\Request $request) {
     \Illuminate\Support\Facades\Log::info('Login attempt for: ' . $request->email);
-    
+
     $credentials = $request->validate([
         'email' => ['required', 'email'],
         'password' => ['required'],
@@ -34,12 +34,12 @@ Route::post('/login', function (Illuminate\Http\Request $request) {
     if (Illuminate\Support\Facades\Auth::attempt($credentials)) {
         \Illuminate\Support\Facades\Log::info('Login successful for: ' . $request->email);
         $request->session()->regenerate();
-        
+
         $user = Illuminate\Support\Facades\Auth::user();
         if ($user->role === 'admin') {
             return redirect()->intended(route('dashboard'));
         }
-        
+
         return redirect()->intended(route('user.dashboard'));
     }
 
@@ -84,13 +84,13 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.approval_workflow.approval_workflow');
     })->name('approval_workflow.index');
 
-    Route::get('/reports', function (){
+    Route::get('/reports', function () {
         return view('admin.reports.reports');
     })->name('reports.index');
 
     Route::get('/profile/settings', function () {
         if (Auth::user()->role === 'admin') {
-            return view('admin.settings.payroll_run');
+            return view('admin.settings.index');
         }
         return view('user.settings.index');
     })->name('profile.settings');

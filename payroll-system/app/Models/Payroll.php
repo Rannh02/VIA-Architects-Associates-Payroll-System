@@ -21,7 +21,7 @@ class Payroll extends Model
         'gross_pay',
         'total_deductions',
         'net_pay',
-        
+
         'employee_id',
     ];
     public function employee()

@@ -68,7 +68,7 @@
                             <div class="form-group">
                                 <label class="form-label">Sex:</label>
                                 <select name="sex" class="form-select @error('sex') border-rose-500 @enderror">
-                                    <option selected disabled>Sex</option>
+
                                     <option value="Male" {{ old('sex') === 'Male' ? 'selected' : '' }}>Male</option>
                                     <option value="Female" {{ old('sex') === 'Female' ? 'selected' : '' }}>Female</option>
                                 </select>
@@ -87,7 +87,8 @@
 
                             <div class="form-group">
                                 <label class="form-label">Date of Birth:</label>
-                                <input type="date" name="date_of_birth" class="form-input" value="{{ old('date_of_birth') }}">
+                                <input type="date" name="date_of_birth" class="form-input"
+                                    value="{{ old('date_of_birth') }}">
 
                             </div>
                         </div>
@@ -97,19 +98,23 @@
                                 <lable class="form-label">Marital Status:</lable>
                                 <select name="marital_status" class="form-select">
                                     <option value="" disabled selected>Select Marital Status</option>
-                                    <option value="Single" {{ old('marital_status') === 'Single' ? 'selected' : '' }}>Single</option>
-                                    <option value="Married" {{ old('marital_status') === 'Married' ? 'selected' : '' }}>Married</option>
-                                    <option value="Widowed" {{ old('marital_status') === 'Widowed' ? 'selected' : '' }}>Widowed</option>
+                                    <option value="Single" {{ old('marital_status') === 'Single' ? 'selected' : '' }}>Single
+                                    </option>
+                                    <option value="Married" {{ old('marital_status') === 'Married' ? 'selected' : '' }}>
+                                        Married</option>
+                                    <option value="Widowed" {{ old('marital_status') === 'Widowed' ? 'selected' : '' }}>
+                                        Widowed</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Number of Dependents:</label>
-                                <input type="number" name="dependents" class="form-input" placeholder="Enter Number of Dependents" value="{{ old('dependents') }}">
+                                <input type="number" name="dependents" class="form-input"
+                                    placeholder="Enter Number of Dependents" value="{{ old('dependents') }}">
                             </div>
                         </div>
 
-                        <div class ="form-row-2">
+                        <div class="form-row-2">
                             <div class="form-group">
                                 <label class="form-label">Basic Salary</label>
                                 <input type="number" name="salary" class="form-input" placeholder="Enter Basic Salary">
@@ -134,14 +139,15 @@
                                     @foreach($departments as $dept)
                                         <option value="{{ $dept->department_id }}" {{ old('department') == $dept->department_id ? 'selected' : '' }}>{{ $dept->department_name }}</option>
                                     @endforeach
-                                </select> 
+                                </select>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Employee Status</label>
                                 <select name="employee_status" class="form-select">
                                     <option value="" disabled selected>Select Employee Status</option>
-                                    <option value="Regular" {{ old('employee_status') === 'Regular' ? 'selected' : '' }}>Regular</option>
+                                    <option value="Regular" {{ old('employee_status') === 'Regular' ? 'selected' : '' }}>
+                                        Regular</option>
                                     <option value="Probationary" {{ old('employee_status') === 'Probationary' ? 'selected' : '' }}>Probationary</option>
                                     <option value="Contractual" {{ old('employee_status') === 'Contractual' ? 'selected' : '' }}>Contractual</option>
                                 </select>
@@ -240,19 +246,19 @@
                             </div>
                         </div>
 
-                        <div class ="form-row-2">
+                        <div class="form-row-2">
                             <div class="form-group">
                                 <label class="form-label">Pag-ibig</label>
                                 <input type="text" name="pagibig_num" class="form-input" placeholder="0000-0000-0000"
                                     value="{{ old('pagibig_num') }}">
                             </div>
-                        
+
                             <div class="form-group">
                                 <label class="form-label">Join Date:</label>
                                 <input type="date" name="join_date" class="form-input" value="{{ old('join_date') }}">
                             </div>
                         </div>
-                    
+
                         <div class="form-actions-inline">
                             <button type="submit" class="btn-primary">Save Employee</button>
                             <button type="reset" class="btn-secondary">Clear Form</button>

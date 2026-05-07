@@ -104,10 +104,16 @@
 /* Table Body */
 .employee-table tbody tr {
     border-bottom: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
+}
+
+.employee-table tbody tr:nth-child(even) {
+    background-color: #f1f5f9;
 }
 
 .employee-table tbody tr:hover {
-    background: #f8fafc;
+    background-color: #e2e8f0;
 }
 
 .employee-table td {
@@ -242,4 +248,93 @@
 
 .employee-action-link:hover {
     color: #4f46e5;
+}
+
+/* Dark Mode Overrides for Manage Employee and Payroll */
+.dark-mode .employee-search-container,
+.dark-mode .employee-table-container {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.dark-mode .employee-search-input {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+.dark-mode .employee-search-input::placeholder {
+    color: #64748b;
+}
+
+.dark-mode .employee-department-select select {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+.dark-mode .employee-table thead tr {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+.dark-mode .employee-table th {
+    color: #94a3b8;
+    border-color: #334155;
+}
+
+.dark-mode .employee-table tbody tr {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.dark-mode .employee-table tbody tr:nth-child(even) {
+    background-color: #0f172a;
+}
+
+.dark-mode .employee-table tbody tr:hover {
+    background-color: #334155;
+}
+
+.dark-mode .employee-table td {
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+/* Override inline text colors for dark mode to ensure visibility */
+.dark-mode .employee-table td[style*="color: #0f172a"] {
+    color: #f8fafc !important;
+}
+
+.dark-mode .employee-id,
+.dark-mode .employee-name,
+.dark-mode .employee-position,
+.dark-mode .employee-salary {
+    color: #f8fafc;
+}
+
+.dark-mode .employee-since,
+.dark-mode .employee-allowance {
+    color: #94a3b8;
+}
+
+.dark-mode .employee-avatar {
+    background: #334155;
+    color: #f8fafc;
+}
+
+.dark-mode .employee-action-link {
+    color: #60a5fa;
+}
+
+.dark-mode .employee-action-link:hover {
+    color: #93c5fd;
+}
+
+.dark-mode .employee-table tr[style*="background: #f1f5f9"] {
+    background: #0f172a !important;
+}
+
+.dark-mode .employee-table tr[style*="background: #f1f5f9"] td {
+    border-color: #334155 !important;
 }
