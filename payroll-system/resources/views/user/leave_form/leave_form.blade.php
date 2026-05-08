@@ -31,7 +31,20 @@
 
         <!-- Leave Form -->
         <div class="premium-card">
-            <form action="#" method="POST">
+            {{-- Flash Messages --}}
+            @if(session('success'))
+                <div style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                    <i data-lucide="check-circle" class="h-4 w-4"></i> {{ session('success') }}
+                </div>
+            @endif
+            @if($errors->any())
+                <div style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+                    <ul style="margin:0;padding-left:18px;">
+                        @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+                    </ul>
+                </div>
+            @endif
+            <form action="{{ route('user.leave_form.store') }}" method="POST">
                 @csrf
                 
                 <!-- Employee Information Section -->
@@ -44,24 +57,32 @@
                     <div class="form-row-2">
                         <div class="premium-group">
                             <label for="employee_id" class="premium-label">Employee ID</label>
-                            <input type="text" id="employee_id" name="employee_id" value="{{ Auth::user()->employee_id ?? '' }}" readonly class="premium-input">
+                            <input type="text" id="employee_id" name="employee_id"
+                                value="{{ $employee->employee_id ?? 'N/A' }}"
+                                readonly class="premium-input">
                         </div>
                         
                         <div class="premium-group">
                             <label for="department" class="premium-label">Department</label>
-                            <input type="text" id="department" name="department" value="{{ Auth::user()->department ?? '' }}" readonly class="premium-input">
+                            <input type="text" id="department" name="department"
+                                value="{{ $employee->department->department_name ?? 'N/A' }}"
+                                readonly class="premium-input">
                         </div>
                     </div>
 
                     <div class="form-row-2">
                         <div class="premium-group">
                             <label for="employee_name" class="premium-label">Employee Name</label>
-                            <input type="text" id="employee_name" name="employee_name" value="{{ Auth::user()->name ?? '' }}" readonly class="premium-input">  
+                            <input type="text" id="employee_name" name="employee_name"
+                                value="{{ $employee ? trim($employee->first_name . ' ' . $employee->last_name) : 'N/A' }}"
+                                readonly class="premium-input">
                         </div>
 
                         <div class="premium-group">
                             <label for="position" class="premium-label">Position</label>
-                            <input type="text" id="position" name="position" value="{{ Auth::user()->position ?? '' }}" readonly class="premium-input">
+                            <input type="text" id="position" name="position"
+                                value="{{ $employee->position->position_name ?? 'N/A' }}"
+                                readonly class="premium-input">
                         </div>
                     </div>
                 </div>
@@ -137,6 +158,11 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="reason" class="premium-label">Reason (Optional)</label>
+                    <textarea id="reason" name="reason" class="premium-input" optional></textarea>
+                </div>
+
                 <!-- Actions -->
                 <div class="form-actions">
                     <button type="submit" class="btn-submit">
@@ -144,6 +170,13 @@
                         Submit Leave Request
                     </button>
                 </div>
+
+                
+
+                <!-- <div class="form-group">
+                    <label for="attachment" class="premium-label">Attachment</label>
+                    <input type="file" id="attachment" name="attachment" class="premium-input">
+                </div> -->
             </form>
         </div>
     </div>

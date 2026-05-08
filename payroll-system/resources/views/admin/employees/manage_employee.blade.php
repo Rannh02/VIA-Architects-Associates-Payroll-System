@@ -35,6 +35,12 @@
             </div>
         </div>
 
+        @if(session('success'))
+            <div style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                <i data-lucide="check-circle" class="h-4 w-4"></i> {{ session('success') }}
+            </div>
+        @endif
+
         <div class="employee-table-container">
             <table class="employee-table">
                 <thead>
@@ -50,60 +56,38 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($employees as $employee)
                     <tr>
-                        <td class="employee-id">E001</td>
+                        <td class="employee-id">E{{ str_pad($employee->employee_id, 3, '0', STR_PAD_LEFT) }}</td>
                         <td>
                             <div class="employee-name-cell">
-                                <span class="employee-avatar">M</span>
+                                <span class="employee-avatar">{{ strtoupper(substr($employee->first_name, 0, 1)) }}</span>
                                 <div>
-                                    <p class="employee-name">Maria Santos</p>
-                                    <p class="employee-since">Since 2020-03-15</p>
+                                    <p class="employee-name">{{ $employee->first_name }} {{ $employee->last_name }}</p>
+                                    <p class="employee-since">Since {{ $employee->hire_date ? \Carbon\Carbon::parse($employee->hire_date)->format('Y-m-d') : 'N/A' }}</p>
                                 </div>
                             </div>
                         </td>
-                        <td class="employee-position">Senior Engineer</td>
-                        <td><span class="department-badge badge-engineering">Engineering</span></td>
-                        <td class="employee-salary">₱55,000.00</td>
-                        <td class="employee-allowance">₱3,000.00</td>
-                        <td><span class="status-badge badge-regular">Regular</span></td>
-                        <td><a href="#" class="employee-action-link">Edit</a></td>
-                    </tr>
-                    <tr>
-                        <td class="employee-id">E002</td>
+                        <td class="employee-position">{{ $employee->position->position_name ?? 'N/A' }}</td>
                         <td>
-                            <div class="employee-name-cell">
-                                <span class="employee-avatar">J</span>
-                                <div>
-                                    <p class="employee-name">Juan dela Cruz</p>
-                                    <p class="employee-since">Since 2021-07-01</p>
-                                </div>
-                            </div>
+                            <span class="department-badge badge-{{ strtolower(str_replace(' ', '-', $employee->department->department_name ?? 'none')) }}">
+                                {{ $employee->department->department_name ?? 'N/A' }}
+                            </span>
                         </td>
-                        <td class="employee-position">Accountant II</td>
-                        <td><span class="department-badge badge-finance">Finance</span></td>
-                        <td class="employee-salary">₱38,000.00</td>
-                        <td class="employee-allowance">₱2,000.00</td>
-                        <td><span class="status-badge badge-regular">Regular</span></td>
-                        <td><a href="#" class="employee-action-link">Edit</a></td>
-                    </tr>
-                    <tr>
-                        <td class="employee-id">E003</td>
+                        <td class="employee-salary">₱{{ number_format($employee->salary_rate ?? $employee->position->basic_salary ?? 0, 2) }}</td>
+                        <td class="employee-allowance">₱0.00</td>
                         <td>
-                            <div class="employee-name-cell">
-                                <span class="employee-avatar">A</span>
-                                <div>
-                                    <p class="employee-name">Ana Reyes</p>
-                                    <p class="employee-since">Since 2022-01-10</p>
-                                </div>
-                            </div>
+                            <span class="status-badge badge-{{ strtolower($employee->employment_status ?? 'regular') }}">
+                                {{ $employee->employment_status ?? 'Regular' }}
+                            </span>
                         </td>
-                        <td class="employee-position">HR Specialist</td>
-                        <td><span class="department-badge badge-hr">Human Resources</span></td>
-                        <td class="employee-salary">₱32,000.00</td>
-                        <td class="employee-allowance">₱1,500.00</td>
-                        <td><span class="status-badge badge-regular">Regular</span></td>
                         <td><a href="#" class="employee-action-link">Edit</a></td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #6b7280;">No employees found.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

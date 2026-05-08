@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\LeaveController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -68,9 +70,8 @@ Route::middleware(['auth'])->group(function () {
         return view('user.payslip.payslip');
     })->name('user.payslip');
 
-    Route::get('/leave_form', function () {
-        return view("user.leave_form.leave_form");
-    })->name('user.leave_form');
+    Route::get('/leave_form', [LeaveController::class, 'showForm'])->name('user.leave_form');
+    Route::post('/leave_form', [LeaveController::class, 'store'])->name('user.leave_form.store');
 
 
    // route for employee controller
@@ -93,9 +94,8 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.employees.payroll_run');
     })->name('payroll.index');
 
-    Route::get('/approval_workflow', function () {
-        return view('admin.approval_workflow.approval_workflow');
-    })->name('approval_workflow.index');
+    Route::get('/approval_workflow', [LeaveRequestController::class, 'index'])->name('approval_workflow.index');
+    Route::patch('/approval_workflow/{leaveRequest}/status', [LeaveRequestController::class, 'updateStatus'])->name('approval_workflow.status');
 
     Route::get('/reports', function () {
         return view('admin.reports.reports');

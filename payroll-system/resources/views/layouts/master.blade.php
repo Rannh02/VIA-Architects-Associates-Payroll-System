@@ -257,6 +257,10 @@
         });
     </script>
     @yield('scripts')
+    {{-- Re-run Lucide after all page-specific scripts so every icon is rendered --}}
+    <script>
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    </script>
 </body>
 
 </html>
