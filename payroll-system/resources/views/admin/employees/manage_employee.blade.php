@@ -58,7 +58,7 @@
                 <tbody>
                     @forelse($employees as $employee)
                     <tr>
-                        <td class="employee-id">E{{ str_pad($employee->employee_id, 3, '0', STR_PAD_LEFT) }}</td>
+                        <td class="employee-id">{{ $employee->employee_number ?? 'E' . str_pad($employee->employee_id, 3, '0', STR_PAD_LEFT) }}</td>
                         <td>
                             <div class="employee-name-cell">
                                 <span class="employee-avatar">{{ strtoupper(substr($employee->first_name, 0, 1)) }}</span>

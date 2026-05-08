@@ -1067,11 +1067,18 @@ body {
     color: var(--slate-400);
 }
 
-.form-actions-inline {
+.form-actions-footer {
     display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--glass-border);
+    width: 100%;
 }
+
+.px-8 { padding-left: 2rem; padding-right: 2rem; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
 
 .form-side-column {
     display: flex;

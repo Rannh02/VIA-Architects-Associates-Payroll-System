@@ -22,7 +22,13 @@ class EmployeeController extends Controller
     {
         $departments = Department::all();
         $positions = Position::all();
-        return view('admin.employees.create', compact('departments', 'positions'));
+        
+        // Calculate next employee number
+        $latestEmployee = Employee::orderBy('employee_id', 'desc')->first();
+        $nextId = $latestEmployee ? $latestEmployee->employee_id + 1 : 1;
+        $nextEmployeeId = 'VIA-' . date('Y') . '-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+
+        return view('admin.employees.create', compact('departments', 'positions', 'nextEmployeeId'));
     }
 
     public function store(Request $request)
@@ -59,61 +65,69 @@ class EmployeeController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        DB::transaction(function () use ($request) {
-            // Handle photo upload
-            $photoPath = null;
-            if ($request->hasFile('profile_photo')) {
-                $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
-            }
+        try {
+            DB::transaction(function () use ($request) {
+                // Handle photo upload
+                $photoPath = null;
+                if ($request->hasFile('profile_photo')) {
+                    $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+                }
 
-            // Create the User account for login
-            $user = User::create([
-                'name' => trim($request->first_name . ' ' . $request->last_name),
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => 'user',
-                'profile_photo_path' => $photoPath,
-            ]);
+                // Create the User account for login
+                $user = User::create([
+                    'name' => trim($request->first_name . ' ' . $request->last_name),
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'role' => 'user',
+                    'profile_photo_path' => $photoPath,
+                ]);
 
-            // Create the Employee record
-            Employee::create([
-                'user_id' => $user->id,
-                'created_by' => auth()->id(),
-                'first_name' => $request->first_name,
-                'middle_name' => $request->middle_name,
-                'last_name' => $request->last_name,
-                'sex' => $request->sex,
-                
-                'current_street_address' => $request->current_street_address,
-                'current_barangay' => $request->current_barangay,
-                'current_city_municipality' => $request->current_city,
-                'current_province' => $request->current_province,
-                'current_zip_code' => $request->current_zip_code,
-                
-                'permanent_street_address' => $request->permanent_street_address,
-                'permanent_barangay' => $request->permanent_barangay,
-                'permanent_city_municipality' => $request->permanent_city,
-                'permanent_province' => $request->permanent_province,
-                'permanent_zip_code' => $request->permanent_zip_code,
+                // Create the Employee record
+                Employee::create([
+                    'employee_number' => $request->employee_id, // This comes from the readonly input
+                    'user_id' => $user->id,
+                    'created_by' => auth()->id(),
+                    'first_name' => $request->first_name,
+                    'middle_name' => $request->middle_name,
+                    'last_name' => $request->last_name,
+                    'sex' => $request->sex,
+                    
+                    'current_street_address' => $request->current_street_address,
+                    'current_barangay' => $request->current_barangay,
+                    'current_city_municipality' => $request->current_city,
+                    'current_province' => $request->current_province,
+                    'current_zip_code' => $request->current_zip_code,
+                    
+                    'permanent_street_address' => $request->permanent_street_address,
+                    'permanent_barangay' => $request->permanent_barangay,
+                    'permanent_city_municipality' => $request->permanent_city,
+                    'permanent_province' => $request->permanent_province,
+                    'permanent_zip_code' => $request->permanent_zip_code,
 
-                'contact_info' => $request->phone,
-                'date_of_birth' => $request->date_of_birth,
-                
-                'salary_rate' => $request->salary,
-                'hire_date' => $request->join_date,
-                
-                'employment_status' => $request->employee_status,
-                'marital_status' => $request->marital_status,
-                'number_of_dependents' => $request->dependents ?: 0,
-                
-                'sss_num' => $request->sss_num,
-                'philhealth_num' => $request->philhealth_num,
-                'pagibig_num' => $request->pagibig_num,
-                
-                'position_id' => $request->position,
-                'department_id' => $request->department,
-            ]);
-        });
+                    'contact_info' => $request->phone,
+                    'date_of_birth' => $request->date_of_birth,
+                    
+                    'salary_rate' => $request->salary,
+                    'hire_date' => $request->join_date,
+                    
+                    'employment_status' => $request->employee_status,
+                    'marital_status' => $request->marital_status,
+                    'number_of_dependents' => $request->dependents ?: 0,
+                    
+                    'sss_num' => $request->sss_num,
+                    'philhealth_num' => $request->philhealth_num,
+                    'pagibig_num' => $request->pagibig_num,
+                    
+                    'position_id' => $request->position,
+                    'department_id' => $request->department,
+                ]);
+
+                \Log::info('Employee created successfully for user: ' . $user->email);
+            });
+        } catch (\Exception $e) {
+            \Log::error('Failed to create employee: ' . $e->getMessage());
+            return back()->withInput()->withErrors(['error' => 'Failed to create employee: ' . $e->getMessage()]);
+        }
 
         return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
     }
