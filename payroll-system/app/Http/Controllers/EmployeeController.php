@@ -56,15 +56,23 @@ class EmployeeController extends Controller
             'pagibig_num' => 'nullable|string|max:50',
             'position' => 'nullable|exists:position,position_id',
             'department' => 'nullable|exists:department,department_id',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         DB::transaction(function () use ($request) {
+            // Handle photo upload
+            $photoPath = null;
+            if ($request->hasFile('profile_photo')) {
+                $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+            }
+
             // Create the User account for login
             $user = User::create([
                 'name' => trim($request->first_name . ' ' . $request->last_name),
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => 'user',
+                'profile_photo_path' => $photoPath,
             ]);
 
             // Create the Employee record

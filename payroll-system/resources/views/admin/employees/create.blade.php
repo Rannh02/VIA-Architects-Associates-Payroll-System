@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <form action="{{ route('employees.store') }}" method="POST" class="employee-form">
+        <form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data" class="employee-form">
             @csrf
             <div class="form-grid">
                 <!-- Left Column: Personal Info -->
@@ -45,7 +45,7 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Middle Name (Optional):</label>
+                                <label class="form-label">Middle Name:</label>
                                 <input type="text" name="middle_name"
                                     class="form-input @error('middle_name') border-rose-500 @enderror"
                                     placeholder="Enter Middle Name" value="{{ old('middle_name') }}">
@@ -280,10 +280,12 @@
                 <div class="form-side-column">
                     <!-- Profile Picture Upload -->
                     <div class="form-card avatar-card">
-                        <div class="avatar-placeholder">
-                            <i data-lucide="user" class="h-16 w-16 text-slate-700"></i>
+                        <div class="avatar-placeholder" id="avatar_preview_container">
+                            <i data-lucide="user" class="h-16 w-16 text-slate-700" id="avatar_icon"></i>
+                            <img id="avatar_preview" class="hidden h-full w-full object-cover rounded-xl" src="" alt="Preview">
                         </div>
-                        <button type="button" class="btn-secondary w-full">
+                        <input type="file" name="profile_photo" id="profile_photo_input" accept="image/*" style="display: none;">
+                        <button type="button" class="btn-secondary w-full" id="upload_photo_btn">
                             <i data-lucide="upload" class="h-4 w-4"></i>
                             Upload Photo
                         </button>
@@ -372,6 +374,30 @@
                 if (positionSelect.value) syncSalary();
             }
             // --- End salary auto-fill ---
+
+            // --- Photo Upload Preview ---
+            const uploadBtn = document.getElementById('upload_photo_btn');
+            const photoInput = document.getElementById('profile_photo_input');
+            const avatarIcon = document.getElementById('avatar_icon');
+            const avatarPreview = document.getElementById('avatar_preview');
+
+            if (uploadBtn && photoInput) {
+                uploadBtn.addEventListener('click', () => photoInput.click());
+
+                photoInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            avatarPreview.src = e.target.result;
+                            avatarPreview.classList.remove('hidden');
+                            avatarIcon.classList.add('hidden');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            // --- End Photo Upload Preview ---
 
         });
     </script>
