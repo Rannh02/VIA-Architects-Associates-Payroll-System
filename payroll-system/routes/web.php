@@ -75,11 +75,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/leave_form', [LeaveController::class, 'showForm'])->name('user.leave_form');
     Route::post('/leave_form', [LeaveController::class, 'store'])->name('user.leave_form.store');
 
+    Route::get('/my-requests', [LeaveRequestController::class, 'myRequests'])->name('user.my_requests');
+
 
    // route for employee controller
     Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+    Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
     // route for department controller
     Route::get('/department/index', [DepartmentController::class, 'index'])->name('department.index');

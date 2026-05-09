@@ -18,6 +18,7 @@ class Leave_Request extends Model
         'date_filed',
         'employee_id',
         'approved_by',
+        'is_viewed_by_employee',
     ];
 
     public function employee()

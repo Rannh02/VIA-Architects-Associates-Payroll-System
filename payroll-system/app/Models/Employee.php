@@ -15,6 +15,7 @@ class Employee extends Model
         'employee_number',
         'created_by',
         'user_id',
+        'profile_photo',
         
         // Personal Information
         'first_name',
@@ -74,5 +75,14 @@ class Employee extends Model
     public function getNameAttribute()
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->profile_photo && \Storage::disk('public')->exists($this->profile_photo)) {
+            return asset('storage/' . $this->profile_photo);
+        }
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=3b82f6&color=ffffff';
     }
 }

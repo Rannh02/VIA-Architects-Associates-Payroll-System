@@ -120,6 +120,7 @@ class EmployeeController extends Controller
                     
                     'position_id' => $request->position,
                     'department_id' => $request->department,
+                    'profile_photo' => $photoPath,
                 ]);
 
                 \Log::info('Employee created successfully for user: ' . $user->email);

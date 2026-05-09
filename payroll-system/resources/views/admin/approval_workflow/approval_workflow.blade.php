@@ -2,131 +2,249 @@
 
 @section('title', 'Approval Workflow - VIA Architects Associates')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/admin/manage-employee.css') }}">
+    <style>
+        .approval-table-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            background: white;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-top: 1.5rem;
+        }
+
+        .approval-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .approval-table thead tr {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .approval-table th {
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+        }
+
+        .approval-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s;
+        }
+
+        .approval-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .approval-table td {
+            padding: 1rem 1.5rem;
+            vertical-align: middle;
+            font-size: 0.875rem;
+        }
+
+        .leave-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.625rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-leave-type {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Dark Mode Overrides */
+        .dark-mode .approval-table-container {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .dark-mode .approval-table thead tr {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        .dark-mode .approval-table th {
+            color: #94a3b8;
+        }
+
+        .dark-mode .approval-table tbody tr {
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        .dark-mode .approval-table tbody tr:hover {
+            background-color: #334155;
+        }
+
+        .dark-mode .badge-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+        }
+
+        .dark-mode .badge-approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+        }
+
+        .dark-mode .badge-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+        }
+
+        .dark-mode .badge-leave-type {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+        }
+        
+        .employee-action-link {
+            cursor: pointer;
+        }
+    </style>
+@endsection
+
 @section('content')
-<div class="max-w-[1600px] mx-auto">
-    <div class="content-header">
-        <div>
-            <h2 class="header-title">Approval Workflow</h2>
-            <p class="header-subtitle">
-                <span class="subtitle-dot"></span>
-                Review and manage employee leave requests
-            </p>
+    <div class="max-w-[1600px] mx-auto">
+        <div class="content-header">
+            <div>
+                <h2 class="header-title">Approval Workflow</h2>
+                <p class="header-subtitle">
+                    <span class="subtitle-dot"></span>
+                    Review and manage employee leave requests
+                </p>
+            </div>
+        </div>
+
+        {{-- Flash Messages --}}
+        @if(session('success'))
+            <div class="alert alert-success" style="margin-bottom: 1.5rem;">
+                <i data-lucide="check-circle"></i> {{ session('success') }}
+            </div>
+        @endif
+
+        {{-- Leave Requests Table --}}
+        <div class="approval-table-container">
+            <table class="approval-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Employee</th>
+                        <th>Department</th>
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Date Filed</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($leaveRequests as $index => $leave)
+                        <tr>
+                            <td style="color: #64748b;">{{ $index + 1 }}</td>
+                            <td>
+                                <div class="employee-name-cell">
+                                    <img src="{{ $leave->employee->photo_url }}" alt="" class="employee-avatar" style="object-fit: cover;">
+                                    <div>
+                                        <div style="font-weight: 600; color: inherit;">
+                                            {{ $leave->employee->first_name ?? '—' }} {{ $leave->employee->last_name ?? '' }}
+                                        </div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">
+                                            {{ $leave->employee->position->position_name ?? 'N/A' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $leave->employee->department->department_name ?? '—' }}</td>
+                            <td>
+                                <span class="leave-badge badge-leave-type">
+                                    {{ ucfirst($leave->leave_type) }}
+                                </span>
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($leave->start_date)->format('M d, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($leave->end_date)->format('M d, Y') }}</td>
+                            <td style="color: #64748b;">{{ \Carbon\Carbon::parse($leave->date_filed)->format('M d, Y') }}</td>
+                            <td style="max-width: 180px;">
+                                <span title="{{ $leave->reason }}"
+                                    style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    {{ $leave->reason ?: '—' }}
+                                </span>
+                            </td>
+                            <td>
+                                @if($leave->status === 'pending')
+                                    <span class="leave-badge badge-pending">Pending</span>
+                                @elseif($leave->status === 'approved')
+                                    <span class="leave-badge badge-approved">Approved</span>
+                                @else
+                                    <span class="leave-badge badge-rejected">Rejected</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="employee-action-group">
+                                    @if($leave->status === 'pending')
+                                        <form action="{{ route('approval_workflow.status', $leave->leave_request_id) }}"
+                                            method="POST" style="margin: 0;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="approved">
+                                            <button type="submit" class="employee-action-link action-view"
+                                                style="background: none; border: 1px solid #e2e8f0; color: #10b981;"
+                                                onclick="return confirm('Approve this leave request?')">
+                                                Approve
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('approval_workflow.status', $leave->leave_request_id) }}"
+                                            method="POST" style="margin: 0;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="rejected">
+                                            <button type="submit" class="employee-action-link action-archive"
+                                                style="background: none; border: 1px solid #e2e8f0;"
+                                                onclick="return confirm('Reject this leave request?')">
+                                                Reject
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span style="font-size: 0.75rem; color: #64748b; font-style: italic;">Processed</span>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="10" style="padding: 3rem; text-align: center; color: #64748b;">
+                                No leave requests found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-
-    {{-- Flash Messages --}}
-    @if(session('success'))
-        <div style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-            <i data-lucide="check-circle" class="h-4 w-4"></i> {{ session('success') }}
-        </div>
-    @endif
-
-    {{-- Leave Requests Table --}}
-    <div class="overflow-x-auto rounded-xl shadow-sm">
-        <table style="width:100%;border-collapse:collapse;background:var(--bg-surface,#fff);border-radius:12px;overflow:hidden;">
-            <thead>
-                <tr style="background:var(--bg-muted,#f3f4f6);">
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">#</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Employee</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Department</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Leave Type</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Start Date</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">End Date</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Date Filed</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Reason</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Status</th>
-                    <th style="padding:12px 16px;text-align:left;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:var(--text-muted,#6b7280);">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($leaveRequests as $index => $leave)
-                <tr style="border-top:1px solid var(--glass-border,#e5e7eb);">
-                    <td style="padding:14px 16px;color:var(--text-muted,#6b7280);font-size:0.875rem;">{{ $index + 1 }}</td>
-                    <td style="padding:14px 16px;">
-                        <div style="font-weight:600;color:var(--text-main,#111827);font-size:0.875rem;">
-                            {{ $leave->employee->first_name ?? '—' }} {{ $leave->employee->last_name ?? '' }}
-                        </div>
-                        <div style="font-size:0.75rem;color:var(--text-muted,#6b7280);">
-                            {{ $leave->employee->position->position_name ?? 'N/A' }}
-                        </div>
-                    </td>
-                    <td style="padding:14px 16px;font-size:0.875rem;color:var(--text-main,#374151);">
-                        {{ $leave->employee->department->department_name ?? '—' }}
-                    </td>
-                    <td style="padding:14px 16px;">
-                        <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:0.75rem;font-weight:500;background:#dbeafe;color:#1d4ed8;">
-                            {{ ucfirst($leave->leave_type) }}
-                        </span>
-                    </td>
-                    <td style="padding:14px 16px;font-size:0.875rem;color:var(--text-main,#374151);">
-                        {{ \Carbon\Carbon::parse($leave->start_date)->format('M d, Y') }}
-                    </td>
-                    <td style="padding:14px 16px;font-size:0.875rem;color:var(--text-main,#374151);">
-                        {{ \Carbon\Carbon::parse($leave->end_date)->format('M d, Y') }}
-                    </td>
-                    <td style="padding:14px 16px;font-size:0.875rem;color:var(--text-muted,#6b7280);">
-                        {{ \Carbon\Carbon::parse($leave->date_filed)->format('M d, Y') }}
-                    </td>
-                    <td style="padding:14px 16px;font-size:0.875rem;color:var(--text-main,#374151);max-width:180px;">
-                        <span title="{{ $leave->reason }}" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                            {{ $leave->reason ?: '—' }}
-                        </span>
-                    </td>
-                    <td style="padding:14px 16px;">
-                        @if($leave->status === 'pending')
-                            <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:0.75rem;font-weight:600;background:#fef3c7;color:#92400e;">
-                                ● Pending
-                            </span>
-                        @elseif($leave->status === 'approved')
-                            <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:0.75rem;font-weight:600;background:#d1fae5;color:#065f46;">
-                                ✓ Approved
-                            </span>
-                        @else
-                            <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:0.75rem;font-weight:600;background:#fee2e2;color:#991b1b;">
-                                ✕ Rejected
-                            </span>
-                        @endif
-                    </td>
-                    <td style="padding:14px 16px;">
-                        @if($leave->status === 'pending')
-                            <div style="display:flex;gap:8px;">
-                                {{-- Approve --}}
-                                <form action="{{ route('approval_workflow.status', $leave->leave_request_id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="hidden" name="status" value="approved">
-                                    <button type="submit"
-                                        onclick="return confirm('Approve this leave request?')"
-                                        style="padding:5px 14px;background:#10b981;color:#fff;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;">
-                                        Approve
-                                    </button>
-                                </form>
-                                {{-- Reject --}}
-                                <form action="{{ route('approval_workflow.status', $leave->leave_request_id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="hidden" name="status" value="rejected">
-                                    <button type="submit"
-                                        onclick="return confirm('Reject this leave request?')"
-                                        style="padding:5px 14px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;">
-                                        Reject
-                                    </button>
-                                </form>
-                            </div>
-                        @else
-                            <span style="font-size:0.8rem;color:var(--text-muted,#9ca3af);">No action</span>
-                        @endif
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="10" style="padding:40px 16px;text-align:center;color:var(--text-muted,#6b7280);font-size:0.9rem;">
-                        No leave requests found.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
 @endsection

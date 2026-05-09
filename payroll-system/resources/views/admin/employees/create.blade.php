@@ -33,9 +33,8 @@
                         <div class="form-group">
                             <label class="form-label">Employee ID:</label>
                             <input type="text" name="employee_id"
-                                class="form-input"
-                                value="{{ $nextEmployeeId }}" readonly
-                                style="background-color: #f3f4f6; cursor: not-allowed;">
+                                class="form-input readonly-field"
+                                value="{{ $nextEmployeeId }}" readonly>
                         </div>
 
                         <div class="form-row-2">
@@ -121,10 +120,10 @@
                         <div class="form-row-2">
                             <div class="form-group">
                                 <label class="form-label">Basic Salary</label>
-                                <input type="number" id="salary_input" name="salary" class="form-input"
+                                <input type="number" id="salary_input" name="salary" 
+                                    class="form-input readonly-field"
                                     placeholder="Auto-filled from position"
-                                    value="{{ old('salary') }}" readonly
-                                    style="background: var(--input-bg, #f9fafb); cursor: not-allowed; opacity: 0.85;">
+                                    value="{{ old('salary') }}" readonly>
                                 <!-- <small style="color: var(--text-muted, #6b7280); font-size: 0.75rem; margin-top: 4px; display:block;">
                                     Salary is set by the selected position.
                                 </small> -->
@@ -282,7 +281,7 @@
                     <div class="form-card avatar-card">
                         <div class="avatar-placeholder" id="avatar_preview_container">
                             <i data-lucide="user" class="h-16 w-16 text-slate-700" id="avatar_icon"></i>
-                            <img id="avatar_preview" class="hidden h-full w-full object-cover rounded-xl" src="" alt="Preview">
+                            <img id="avatar_preview" class="h-full w-full object-cover rounded-xl" style="display: none;" src="" alt="Preview">
                         </div>
                         <input type="file" name="profile_photo" id="profile_photo_input" accept="image/*" style="display: none;">
                         <button type="button" class="btn-secondary w-full" id="upload_photo_btn">
@@ -402,8 +401,8 @@
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             avatarPreview.src = e.target.result;
-                            avatarPreview.classList.remove('hidden');
-                            avatarIcon.classList.add('hidden');
+                            avatarPreview.style.display = 'block';
+                            avatarIcon.style.display = 'none';
                         }
                         reader.readAsDataURL(file);
                     }

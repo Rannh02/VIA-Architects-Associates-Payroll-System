@@ -10,6 +10,29 @@ use Illuminate\Support\Facades\Auth;
 class LeaveRequestController extends Controller
 {
     /**
+     * Employee: Show my own leave requests (Approval Workflow for Employee).
+     */
+    public function myRequests()
+    {
+        $employee = Employee::where('user_id', Auth::id())->first();
+        $leaveRequests = collect();
+
+        if ($employee) {
+            $leaveRequests = Leave_Request::where('employee_id', $employee->employee_id)
+                ->latest()
+                ->get();
+
+            // Mark processed requests as viewed
+            Leave_Request::where('employee_id', $employee->employee_id)
+                ->whereIn('status', ['approved', 'rejected'])
+                ->where('is_viewed_by_employee', false)
+                ->update(['is_viewed_by_employee' => true]);
+        }
+
+        return view('user.my_requests.index', compact('leaveRequests'));
+    }
+
+    /**
      * Show the leave request form for the logged-in employee.
      */
     public function create()

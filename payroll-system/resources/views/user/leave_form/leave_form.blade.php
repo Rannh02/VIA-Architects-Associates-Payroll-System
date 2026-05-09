@@ -16,29 +16,20 @@
                     Submit your leave request for approval.
                 </p>
             </div>
-
-            <div class="header-actions">
-                <button class="btn-primary" style="background-color: var(--bg-surface); color: var(--text-main); border: 1px solid var(--glass-border);">
-                    <i data-lucide="clock" class="mr-2 h-4 w-4"></i>
-                    Leave History
-                </button>
-                <button class="btn-primary">
-                    <i data-lucide="plus" class="h-4 w-4 mr-2"></i>
-                    New Request
-                </button>
-            </div>
         </div>
 
         <!-- Leave Form -->
         <div class="premium-card">
             {{-- Flash Messages --}}
             @if(session('success'))
-                <div style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                <div
+                    style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
                     <i data-lucide="check-circle" class="h-4 w-4"></i> {{ session('success') }}
                 </div>
             @endif
             @if($errors->any())
-                <div style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+                <div
+                    style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
                     <ul style="margin:0;padding-left:18px;">
                         @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
                     </ul>
@@ -46,27 +37,26 @@
             @endif
             <form action="{{ route('user.leave_form.store') }}" method="POST">
                 @csrf
-                
+
                 <!-- Employee Information Section -->
                 <div class="form-section">
                     <h3 class="form-section-title">
                         <i data-lucide="user" class="h-5 w-5"></i>
                         Employee Details
                     </h3>
-                    
+
                     <div class="form-row-2">
                         <div class="premium-group">
                             <label for="employee_id" class="premium-label">Employee ID</label>
                             <input type="text" id="employee_id" name="employee_id"
-                                value="{{ $employee->employee_id ?? 'N/A' }}"
-                                readonly class="premium-input">
+                                value="{{ $employee->employee_id ?? 'N/A' }}" readonly class="premium-input">
                         </div>
-                        
+
                         <div class="premium-group">
                             <label for="department" class="premium-label">Department</label>
                             <input type="text" id="department" name="department"
-                                value="{{ $employee->department->department_name ?? 'N/A' }}"
-                                readonly class="premium-input">
+                                value="{{ $employee->department->department_name ?? 'N/A' }}" readonly
+                                class="premium-input">
                         </div>
                     </div>
 
@@ -81,8 +71,7 @@
                         <div class="premium-group">
                             <label for="position" class="premium-label">Position</label>
                             <input type="text" id="position" name="position"
-                                value="{{ $employee->position->position_name ?? 'N/A' }}"
-                                readonly class="premium-input">
+                                value="{{ $employee->position->position_name ?? 'N/A' }}" readonly class="premium-input">
                         </div>
                     </div>
                 </div>
@@ -105,7 +94,7 @@
                                 <option value="family">Family Leave</option>
                                 <option value="parental">Parental Leave</option>
                                 <option value="bereavement">Bereavement Leave</option>
-                                <option value="compensatory">Compensatory Leave</option>    
+                                <option value="compensatory">Compensatory Leave</option>
                                 <option value="vto">Volunteer Time Off (VTO)</option>
                             </select>
                         </div>
@@ -130,7 +119,7 @@
                         <i data-lucide="tag" class="h-5 w-5"></i>
                         Code Time As
                     </h3>
-                    
+
                     <div class="toggles-grid">
                         <label class="custom-toggle">
                             <input type="checkbox" name="paid">
@@ -139,7 +128,7 @@
                                 <span>Paid Leave</span>
                             </div>
                         </label>
-                        
+
                         <label class="custom-toggle">
                             <input type="checkbox" name="unpaid_leave">
                             <div class="toggle-card">
@@ -147,7 +136,7 @@
                                 <span>Unpaid Leave</span>
                             </div>
                         </label>
-                        
+
                         <label class="custom-toggle">
                             <input type="checkbox" name="undertime">
                             <div class="toggle-card">
@@ -171,13 +160,15 @@
                     </button>
                 </div>
 
-                
+
 
                 <!-- <div class="form-group">
-                    <label for="attachment" class="premium-label">Attachment</label>
-                    <input type="file" id="attachment" name="attachment" class="premium-input">
-                </div> -->
+                        <label for="attachment" class="premium-label">Attachment</label>
+                        <input type="file" id="attachment" name="attachment" class="premium-input">
+                    </div> -->
             </form>
         </div>
+
+    </div>
     </div>
 @endsection

@@ -80,25 +80,24 @@
                 </button>
             </div>
             @if($recentActivities->count() > 0)
-                <div class="activity-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                <div class="activity-list">
                     @foreach($recentActivities as $activity)
-                        <div class="activity-item" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.5rem;" class="dark:bg-slate-800 dark:border-slate-700">
+                        <div class="activity-item">
                             <div style="display: flex; align-items: center; gap: 1rem;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #eff6ff; color: #3b82f6; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">
-                                    {{ strtoupper(substr($activity->employee->first_name ?? 'U', 0, 1)) }}
-                                </div>
+                                <img src="{{ $activity->employee->photo_url }}" alt="" class="employee-avatar" 
+                                     style="width: 45px; height: 45px; border-radius: 12px; object-fit: cover; border: 1px solid var(--glass-border);">
                                 <div>
-                                    <p style="font-weight: 600; color: #1e293b; margin: 0;" class="dark:text-slate-200">
+                                    <p class="profile-name" style="margin: 0;">
                                         {{ $activity->employee->name ?? 'Unknown Employee' }}
                                     </p>
-                                    <p style="font-size: 0.85rem; color: #64748b; margin: 0;">Requested {{ $activity->leave_type }}</p>
+                                    <p class="profile-role" style="text-transform: none; font-size: 0.85rem; margin: 0;">Requested {{ $activity->leave_type }}</p>
                                 </div>
                             </div>
                             <div style="text-align: right;">
                                 <span class="badge {{ $activity->status === 'Pending' ? 'badge-amber' : ($activity->status === 'Approved' ? 'badge-emerald' : 'badge-rose') }}">
                                     {{ $activity->status }}
                                 </span>
-                                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.35rem; margin-bottom: 0;">
+                                <p class="activity-time" style="font-size: 0.75rem; color: var(--slate-500); margin-top: 0.35rem; margin-bottom: 0;">
                                     {{ $activity->created_at->diffForHumans() }}
                                 </p>
                             </div>

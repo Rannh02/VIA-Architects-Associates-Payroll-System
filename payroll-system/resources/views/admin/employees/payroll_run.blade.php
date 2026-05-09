@@ -148,7 +148,7 @@
                 <tr class="payroll-row" data-name="{{ strtolower($name) }}" data-dept="{{ $dept }}">
                     <td class="employee-id">
                         <div class="employee-name-cell">
-                            <span class="employee-avatar">{{ $init }}</span>
+                            <img src="{{ $emp->photo_url }}" alt="" class="employee-avatar" style="object-fit: cover;">
                             <div>
                                 <p class="employee-name">{{ $name }}</p>
                                 @if($emp)
@@ -225,7 +225,7 @@
                     data-dept="{{ $emp->department?->department_name ?? '' }}">
                     <td class="employee-id">
                         <div class="employee-name-cell">
-                            <span class="employee-avatar">{{ $init }}</span>
+                            <img src="{{ $emp->photo_url }}" alt="" class="employee-avatar" style="object-fit: cover;">
                             <div><p class="employee-name">{{ $name }}</p></div>
                         </div>
                     </td>

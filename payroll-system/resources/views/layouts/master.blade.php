@@ -43,10 +43,63 @@
             </div>
 
             <div class="nav-actions">
-                <button class="icon-btn">
-                    <i data-lucide="bell" class="h-5 w-5"></i>
-                    <span class="notification-dot"></span>
-                </button>
+                <div class="profile-container" style="position: relative;">
+                    <button id="notification-btn" class="icon-btn">
+                        <i data-lucide="bell" class="h-5 w-5"></i>
+                        @if($pendingLeaveCount > 0)
+                            <span class="notification-dot"></span>
+                        @endif
+                    </button>
+
+                    <!-- Notification Dropdown -->
+                    <div id="notification-dropdown" class="dropdown-menu notification-dropdown">
+                        <div class="notification-header">
+                            <h3 class="dropdown-label" style="margin: 0;">Notifications</h3>
+                            @if($pendingLeaveCount > 0)
+                                <span class="badge-teal" style="font-size: 10px; padding: 2px 6px;">{{ $pendingLeaveCount }} New</span>
+                            @endif
+                        </div>
+                        
+                        <div class="notification-list">
+                            @forelse($recentPendingLeaves as $leave)
+                                @php
+                                    $isAdmin = Auth::user()->role === 'admin';
+                                    $targetRoute = $isAdmin ? route('approval_workflow.index') : route('user.my_requests');
+                                    $title = $isAdmin ? 'Leave Request Pending' : 'Leave ' . ucfirst($leave->status);
+                                    $icon = $leave->status === 'approved' ? 'check-circle' : ($leave->status === 'rejected' ? 'x-circle' : 'calendar');
+                                    $iconColor = $leave->status === 'approved' ? '#10b981' : ($leave->status === 'rejected' ? '#ef4444' : 'var(--primary)');
+                                @endphp
+                                <a href="{{ $targetRoute }}" class="notification-item">
+                                    <div class="notification-icon-box" style="background-color: {{ $iconColor }}15; color: {{ $iconColor }};">
+                                        <i data-lucide="{{ $icon }}" class="h-4 w-4"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p class="notification-title">{{ $title }}</p>
+                                        <p class="notification-desc">
+                                            @if($isAdmin)
+                                                <strong>{{ $leave->employee->name }}</strong> requested for {{ $leave->leave_type }}.
+                                            @else
+                                                Your <strong>{{ $leave->leave_type }}</strong> request has been {{ $leave->status }}.
+                                            @endif
+                                        </p>
+                                        <span class="notification-time">{{ $leave->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="empty-notifications">
+                                    <i data-lucide="bell-off" class="h-8 w-8 mb-2" style="opacity: 0.3;"></i>
+                                    <p style="font-size: 0.875rem;">No new notifications</p>
+                                </div>
+                            @endforelse
+                        </div>
+
+                        @if($pendingLeaveCount > 0)
+                            <div class="notification-footer">
+                                <a href="{{ route('approval_workflow.index') }}" class="view-all-link">View All Requests</a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
 
                 <!-- Profile Section -->
                 <div class="profile-container">
@@ -197,7 +250,7 @@
                         <a href="{{ route('user.dashboard') }}"
                             class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Dashboard</span>
+                            <span class="sidebar-text">Overview</span>
                         </a>
                         <a href="{{ route('user.attendance') }}"
                             class="sidebar-link {{ request()->routeIs('user.attendance') ? 'sidebar-link-active' : '' }}">
@@ -213,8 +266,14 @@
 
                         <a href="{{ route('user.leave_form') }}"
                             class="sidebar-link {{ request()->routeIs('user.leave_form') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="calendar" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Leave Requests</span>
+                            <i data-lucide="file-edit" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Apply for Leave</span>
+                        </a>
+
+                        <a href="{{ route('user.my_requests') }}"
+                            class="sidebar-link {{ request()->routeIs('user.my_requests') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="git-pull-request" class="h-5 w-5"></i>
+                            <span class="sidebar-text">My Requests</span>
                         </a>
                     @endif
                 </nav>
@@ -233,17 +292,33 @@
             // Initialize Lucide Icons
             lucide.createIcons();
 
-            // Profile Dropdown Toggle
+            // Profile & Notification Dropdown Logic
             const profileBtn = document.getElementById('profile-btn');
             const profileDropdown = document.getElementById('profile-dropdown');
-            if (profileBtn && profileDropdown) {
-                profileBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    profileDropdown.classList.toggle('show');
-                });
-                profileDropdown.addEventListener('click', (e) => e.stopPropagation());
-                window.addEventListener('click', () => profileDropdown.classList.remove('show'));
-            }
+            const notificationBtn = document.getElementById('notification-btn');
+            const notificationDropdown = document.getElementById('notification-dropdown');
+
+            const toggleDropdown = (btn, dropdown, otherDropdown) => {
+                if (btn && dropdown) {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (otherDropdown) otherDropdown.classList.remove('show');
+                        dropdown.classList.toggle('show');
+                    });
+                }
+            };
+
+            toggleDropdown(profileBtn, profileDropdown, notificationDropdown);
+            toggleDropdown(notificationBtn, notificationDropdown, profileDropdown);
+
+            window.addEventListener('click', () => {
+                if (profileDropdown) profileDropdown.classList.remove('show');
+                if (notificationDropdown) notificationDropdown.classList.remove('show');
+            });
+
+            [profileDropdown, notificationDropdown].forEach(dropdown => {
+                if (dropdown) dropdown.addEventListener('click', (e) => e.stopPropagation());
+            });
 
             // Sidebar Collapse Logic
             const sidebar = document.getElementById('sidebar');
