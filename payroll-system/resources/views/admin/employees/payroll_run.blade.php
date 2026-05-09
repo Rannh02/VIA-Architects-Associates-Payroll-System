@@ -194,15 +194,17 @@
     @else
     {{-- No payroll records yet — show the employee list instead --}}
     <div class="employee-table-container">
+        @if(!$employees->count())
         <div class="empty-payroll">
             <i data-lucide="inbox" style="width:40px; height:40px; margin-bottom:.75rem; opacity:.4;"></i>
             <p style="font-weight:600; margin-bottom:.25rem;">No payroll records found.</p>
             <p>Run payroll from the controller or use the Generate button to create records.</p>
         </div>
+        @endif
 
         {{-- Employee roster for reference --}}
         @if($employees->count())
-        <table class="employee-table" id="payrollTable" style="font-size:0.75rem; margin-top:1rem;">
+        <table class="employee-table" id="payrollTable" style="font-size:0.75rem;">
             <thead>
                 <tr>
                     <th>Employee</th>

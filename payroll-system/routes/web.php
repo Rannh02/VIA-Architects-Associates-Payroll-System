@@ -62,9 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // route for user dashboard all in sidebar
-    Route::get('/user-dashboard', function () {
-        return view('user.dashboard.index');
-    })->name('user.dashboard');
+    Route::get('/user-dashboard', [DashboardController::class, 'userIndex'])->name('user.dashboard');
 
     Route::get('/attendance', function () {
         return view('user.attendance.index');

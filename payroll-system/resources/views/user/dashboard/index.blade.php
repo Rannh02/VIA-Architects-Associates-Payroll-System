@@ -27,30 +27,46 @@
 
         <!-- Stats Grid -->
         <div class="stats-grid">
-            @php
-                $stats = [
-                    ['label' => 'Attendance', 'value' => 4, 'icon' => 'user-check', 'color' => 'teal', 'badge' => 'Ontime'],
-                    ['label' => 'Abcenses', 'value' => 12, 'icon' => 'user-x', 'color' => 'rose', 'badge' => 'Monthly'],
-                    ['label' => 'Late Arrivals', 'value' => 9, 'icon' => 'clock', 'color' => 'amber', 'badge' => 'Cumulative'],
-                    ['label' => 'Over Time', 'value' => 9, 'icon' => 'clock', 'color' => 'amber', 'badge' => 'Hour'],
-                    
-                ];
-            @endphp
-            @foreach($stats as $stat)
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon stat-icon-{{ $stat['color'] }}">
-                            <i data-lucide="{{ $stat['icon'] }}" class="h-6 w-6"></i>
-                        </div>
-                        <span
-                            class="stat-badge badge-{{ $stat['color'] === 'teal' ? 'teal' : ($stat['color'] === 'rose' ? 'rose' : 'amber') }}">
-                            {{ $stat['badge'] }}
-                        </span>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-teal">
+                        <i data-lucide="user-check" class="h-6 w-6"></i>
                     </div>
-                    <h3 class="stat-label">{{ $stat['label'] }}</h3>
-                    <p class="stat-value">{{ $stat['value'] }}</p>
+                    <span class="stat-badge badge-teal">Ontime</span>
                 </div>
-            @endforeach
+                <h3 class="stat-label">Attendance</h3>
+                <p class="stat-value">{{ $stats['attendance'] }}</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-rose">
+                        <i data-lucide="user-x" class="h-6 w-6"></i>
+                    </div>
+                    <span class="stat-badge badge-rose">Monthly</span>
+                </div>
+                <h3 class="stat-label">Absences</h3>
+                <p class="stat-value">{{ $stats['absences'] }}</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-amber">
+                        <i data-lucide="clock" class="h-6 w-6"></i>
+                    </div>
+                    <span class="stat-badge badge-amber">Cumulative</span>
+                </div>
+                <h3 class="stat-label">Late Arrivals</h3>
+                <p class="stat-value">{{ $stats['late'] }}</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-amber">
+                        <i data-lucide="clock" class="h-6 w-6"></i>
+                    </div>
+                    <span class="stat-badge badge-amber">Hour</span>
+                </div>
+                <h3 class="stat-label">Over Time</h3>
+                <p class="stat-value">{{ $stats['overtime'] }}</p>
+            </div>
         </div>
 
         <!-- Financial Summary Chart -->
@@ -66,11 +82,11 @@
                 <div style="display: flex; gap: 1rem;">
                     <div class="summary-item" style="margin: 0; padding: 1rem;">
                         <span class="item-label">Latest Payroll</span>
-                        <span class="item-value" style="font-size: 1.25rem;">₱45,465</span>
+                        <span class="item-value" style="font-size: 1.25rem;">₱{{ number_format($latestPayrollAmount, 2) }}</span>
                     </div>
                     <div class="summary-item" style="margin: 0; padding: 1rem;">
                         <span class="item-label">Year to Date (YTD)</span>
-                        <span class="item-value" style="font-size: 1.25rem;">₱545,580</span>
+                        <span class="item-value" style="font-size: 1.25rem;">₱{{ number_format($ytdPayroll, 2) }}</span>
                     </div>
                     <button id="btn-view-payroll" class="btn-view-payroll" style="align-self: center;">
                         <i data-lucide="external-link" class="mr-2 h-4 w-4"></i> View Details
@@ -244,7 +260,7 @@
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     datasets: [{
                         label: 'Monthly Payroll (₱)',
-                        data: [42000, 42500, 43000, 45000, 45000, 45465, 45465, 46000, 46000, 47000, 47000, 50000],
+                        data: @json($financialData),
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         borderWidth: 2,
@@ -277,13 +293,35 @@
             new Chart(document.getElementById('deductionChart'), {
                 type: 'bar',
                 data: {
-                    labels: ['Maria', 'Juan', 'Ana', 'Carlo', 'Liza'],
+                    labels: ["{{ Auth::user()->name }}"],
                     datasets: [
-                        { label: 'SSS', data: [1500, 1500, 1500, 1500, 1500], backgroundColor: '#8b5cf6', borderRadius: {bottomLeft: 4, bottomRight: 4} },
-                        { label: 'PhilHealth', data: [1200, 800, 700, 1000, 1100], backgroundColor: '#10b981' },
-                        { label: 'Pag-IBIG', data: [300, 200, 200, 200, 200], backgroundColor: '#0ea5e9' },
-                        { label: 'Tax', data: [7500, 3000, 1500, 5500, 5300], backgroundColor: '#ef4444' },
-                        { label: 'Absences', data: [600, 250, 4600, 600, 2700], backgroundColor: '#f59e0b', borderRadius: {topLeft: 4, topRight: 4} }
+                        { 
+                            label: 'SSS', 
+                            data: [{{ $deductionData['sss'] }}], 
+                            backgroundColor: '#8b5cf6', 
+                            borderRadius: {bottomLeft: 4, bottomRight: 4} 
+                        },
+                        { 
+                            label: 'PhilHealth', 
+                            data: [{{ $deductionData['philhealth'] }}], 
+                            backgroundColor: '#10b981' 
+                        },
+                        { 
+                            label: 'Pag-IBIG', 
+                            data: [{{ $deductionData['pagibig'] }}], 
+                            backgroundColor: '#0ea5e9' 
+                        },
+                        { 
+                            label: 'Tax', 
+                            data: [{{ $deductionData['tax'] }}], 
+                            backgroundColor: '#ef4444' 
+                        },
+                        { 
+                            label: 'Absences', 
+                            data: [{{ $deductionData['absences'] }}], 
+                            backgroundColor: '#f59e0b', 
+                            borderRadius: {topLeft: 4, topRight: 4} 
+                        }
                     ]
                 },
                 options: {
@@ -297,7 +335,12 @@
                         y: { 
                             stacked: true, 
                             grid: { borderDash: [4, 4], color: gridColor }, 
-                            ticks: { color: textColor, callback: function(value) { return '₱' + (value/1000) + 'k'; } } 
+                            ticks: { 
+                                color: textColor, 
+                                callback: function(value) { 
+                                    return '₱' + value.toLocaleString(); 
+                                } 
+                            } 
                         }
                     }
                 }
@@ -307,12 +350,12 @@
             new Chart(document.getElementById('attendanceChart'), {
                 type: 'bar',
                 data: {
-                    labels: ['Maria', 'Juan', 'Ana', 'Carlo', 'Liza'],
+                    labels: ["{{ Auth::user()->name }}"],
                     datasets: [
-                        { label: 'Present Days', data: [21, 22, 19, 22, 21], backgroundColor: '#10b981', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 },
-                        { label: 'Absent Days', data: [0, 0, 3, 0, 1], backgroundColor: '#ef4444', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 },
-                        { label: 'Late Days', data: [4, 5, 4, 5, 3], backgroundColor: '#f59e0b', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 },
-                        { label: 'OT Hours', data: [5, 6, 7, 3, 3], backgroundColor: '#3b82f6', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 }
+                        { label: 'Present Days', data: [{{ $attendanceSummary['present'] }}], backgroundColor: '#10b981', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 },
+                        { label: 'Absent Days', data: [{{ $attendanceSummary['absent'] }}], backgroundColor: '#ef4444', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 },
+                        { label: 'Late Days', data: [{{ $attendanceSummary['late'] }}], backgroundColor: '#f59e0b', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 },
+                        { label: 'OT Hours', data: [{{ $attendanceSummary['ot'] }}], backgroundColor: '#3b82f6', barPercentage: 0.6, categoryPercentage: 0.8, borderRadius: 2 }
                     ]
                 },
                 options: {
@@ -325,8 +368,7 @@
                         y: { 
                             grid: { borderDash: [4, 4], color: gridColor }, 
                             min: 0, 
-                            max: 25, 
-                            ticks: { stepSize: 6, color: textColor } 
+                            ticks: { stepSize: 5, color: textColor } 
                         }
                     }
                 }
