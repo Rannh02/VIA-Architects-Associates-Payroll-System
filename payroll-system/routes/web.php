@@ -6,6 +6,12 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\SssController;
+use App\Http\Controllers\PhilhealthController;
+use App\Http\Controllers\PagibigController;
+use App\Http\Controllers\TaxController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -53,9 +59,7 @@ Route::post('/login', function (Illuminate\Http\Request $request) {
     ])->onlyInput('email');
 });
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // route for user dashboard all in sidebar
     Route::get('/user-dashboard', function () {
@@ -89,10 +93,31 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/positions', [PositionController::class, 'store'])->name('position.store');
     Route::delete('/positions/{position}', [PositionController::class, 'destroy'])->name('position.destroy');
 
+    // route for sss controller
+    Route::get('/sss/index', [SssController::class, 'index'])->name('sss.index');
+    Route::post('/sss', [SssController::class, 'store'])->name('sss.store');
+    Route::put('/sss/{sss}', [SssController::class, 'update'])->name('sss.update');
+    Route::delete('/sss/{sss}', [SssController::class, 'destroy'])->name('sss.destroy');
 
-    Route::get('/payroll', function () {
-        return view('admin.employees.payroll_run');
-    })->name('payroll.index');
+    //route for philhealth controller
+    Route::get('/philhealth/index', [PhilhealthController::class, 'index'])->name('philhealth.index');
+    Route::post('/philhealth', [PhilhealthController::class, 'store'])->name('philhealth.store');
+    Route::put('/philhealth/{philhealth}', [PhilhealthController::class, 'update'])->name('philhealth.update');
+    Route::delete('/philhealth/{philhealth}', [PhilhealthController::class, 'destroy'])->name('philhealth.destroy');
+
+    //route for pagibig controller
+    Route::get('/pagibig/index', [PagibigController::class, 'index'])->name('pagibig.index');
+    Route::post('/pagibig', [PagibigController::class, 'store'])->name('pagibig.store');
+    Route::put('/pagibig/{pagibig}', [PagibigController::class, 'update'])->name('pagibig.update');
+    Route::delete('/pagibig/{pagibig}', [PagibigController::class, 'destroy'])->name('pagibig.destroy');
+
+    //route for tax controller
+    Route::get('/tax/index', [TaxController::class, 'index'])->name('tax.index');
+    Route::post('/tax', [TaxController::class, 'store'])->name('tax.store');
+    Route::put('/tax/{tax}', [TaxController::class, 'update'])->name('tax.update');
+    Route::delete('/tax/{tax}', [TaxController::class, 'destroy'])->name('tax.destroy');
+
+    Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
 
     Route::get('/approval_workflow', [LeaveRequestController::class, 'index'])->name('approval_workflow.index');
     Route::patch('/approval_workflow/{leaveRequest}/status', [LeaveRequestController::class, 'updateStatus'])->name('approval_workflow.status');

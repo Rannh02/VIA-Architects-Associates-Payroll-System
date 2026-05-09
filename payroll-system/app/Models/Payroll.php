@@ -10,19 +10,25 @@ class Payroll extends Model
     protected $primaryKey = 'payroll_id';
 
     protected $fillable = [
-
+        'employee_id',
         'payroll_period_start',
         'payroll_period_end',
         'payroll_date',
 
-        //employee earned salary with deductions and benefits
+        // Earnings
         'basic_salary',
         'overtime_pay',
         'gross_pay',
+
+        // Government contributions
+        'sss',
+        'philhealth',
+        'hdmf',
+        'tax',
+
+        // Summary
         'total_deductions',
         'net_pay',
-
-        'employee_id',
     ];
     public function employee()
     {

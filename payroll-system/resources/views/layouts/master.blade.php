@@ -147,6 +147,47 @@
                             <span class="sidebar-text">Approval Workflow</span>
                         </a>
 
+                        {{-- Government Contributions Accordion --}}
+                        @php
+                            $govtRoutes = ['sss.index', 'philhealth.index', 'pagibig.index', 'tax.index'];
+                            $govtActive = request()->routeIs($govtRoutes);
+                        @endphp
+
+                        <div class="sidebar-group">
+                            <button id="govt-toggle"
+                                class="sidebar-link sidebar-group-btn w-full {{ $govtActive ? 'sidebar-link-active' : '' }}"
+                                onclick="toggleGovtMenu()"
+                                style="background:none; border:none; cursor:pointer; width:100%; text-align:left;">
+                                <i data-lucide="landmark" class="h-5 w-5"></i>
+                                <span class="sidebar-text">Government Contributions</span>
+                                <i data-lucide="chevron-down" class="h-4 w-4 sidebar-text govt-chevron" id="govt-chevron"
+                                    style="margin-left:auto; transition: transform 0.3s;"></i>
+                            </button>
+
+                            <div id="govt-submenu" class="sidebar-submenu" style="display:none; padding-left:1rem;">
+                                <a href="{{ route('sss.index') }}"
+                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('sss.index') ? 'sidebar-link-active' : '' }}">
+                                    <i data-lucide="shield" class="h-4 w-4"></i>
+                                    <span class="sidebar-text">SSS</span>
+                                </a>
+                                <a href="{{ route('philhealth.index') }}"
+                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('philhealth.index') ? 'sidebar-link-active' : '' }}">
+                                    <i data-lucide="heart-pulse" class="h-4 w-4"></i>
+                                    <span class="sidebar-text">PhilHealth</span>
+                                </a>
+                                <a href="{{ route('pagibig.index') }}"
+                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('pagibig.index') ? 'sidebar-link-active' : '' }}">
+                                    <i data-lucide="home" class="h-4 w-4"></i>
+                                    <span class="sidebar-text">Pag-IBIG</span>
+                                </a>
+                                <a href="{{ route('tax.index') }}"
+                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('tax.index') ? 'sidebar-link-active' : '' }}">
+                                    <i data-lucide="receipt" class="h-4 w-4"></i>
+                                    <span class="sidebar-text">Tax</span>
+                                </a>
+                            </div>
+                        </div>
+
                         <a href="{{ route('reports.index') }}"
                             class="sidebar-link {{ request()->routeIs('reports.index') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="file-bar-chart" class="h-5 w-5"></i>
@@ -256,6 +297,36 @@
             }
         });
     </script>
+
+    <script>
+        // Government Contributions accordion
+        function toggleGovtMenu() {
+            const submenu  = document.getElementById('govt-submenu');
+            const chevron  = document.getElementById('govt-chevron');
+            const isOpen   = submenu.style.display !== 'none';
+
+            submenu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            localStorage.setItem('govtMenuOpen', !isOpen);
+        }
+
+        // Restore accordion state on load
+        document.addEventListener('DOMContentLoaded', function () {
+            const submenu = document.getElementById('govt-submenu');
+            const chevron = document.getElementById('govt-chevron');
+            if (!submenu || !chevron) return;
+
+            // Auto-open if currently on a govt route
+            const govtActive = {{ isset($govtActive) && $govtActive ? 'true' : 'false' }};
+            const savedOpen  = localStorage.getItem('govtMenuOpen') === 'true';
+
+            if (govtActive || savedOpen) {
+                submenu.style.display = 'block';
+                chevron.style.transform = 'rotate(180deg)';
+            }
+        });
+    </script>
+
     @yield('scripts')
     {{-- Re-run Lucide after all page-specific scripts so every icon is rendered --}}
     <script>
