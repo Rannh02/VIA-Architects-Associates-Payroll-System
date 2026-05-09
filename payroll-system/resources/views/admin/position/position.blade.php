@@ -69,6 +69,73 @@
     </div>
 </div>
 
+<!-- Add Position Modal -->
+<div id="positionModal" class="modal-overlay">
+    <div class="modal-content-delete" style="max-width: 520px;">
+        <form action="{{ route('position.store') }}" method="POST">
+            @csrf
+            <div class="modal-inner">
+                <div class="modal-top">
+                    <div class="modal-icon-container" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                        <i data-lucide="briefcase" class="h-6 w-6"></i>
+                    </div>
+                    <div class="modal-info">
+                        <h3 class="modal-title">Add Position</h3>
+                        <p class="modal-description">Fill in the details below to create a new position.</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Position Code</label>
+                        <input type="text" name="position_code" class="form-input" placeholder="e.g. DEV, PM, QA" value="{{ old('position_code') }}" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Position Name</label>
+                        <input type="text" name="position_name" class="form-input" placeholder="e.g. Software Developer" value="{{ old('position_name') }}" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Department</label>
+                        <select name="department_id" class="form-input"
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                            <option value="">— Select Department —</option>
+                            @foreach($departments as $department)
+                                <option value="{{ $department->department_id }}" {{ old('department_id') == $department->department_id ? 'selected' : '' }}>
+                                    {{ $department->department_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Basic Salary</label>
+                        <input type="number" name="basic_salary" class="form-input" placeholder="e.g. 25000" value="{{ old('basic_salary') }}" required step="0.01" min="0"
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Description</label>
+                        <textarea name="description" class="form-input" rows="2" placeholder="Optional description..."
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; resize: none; background: #ffffff;">{{ old('description') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Status</label>
+                        <select name="status" class="form-input" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                            <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-modal" style="background: #3b82f6; color: white; border-color: #3b82f6;">Add Position</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div id="delete-modal" class="modal-overlay">
     <div class="modal-content-delete">

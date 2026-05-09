@@ -19,6 +19,7 @@ class Leave_Request extends Model
         'employee_id',
         'approved_by',
         'is_viewed_by_employee',
+        'is_viewed_by_admin',
     ];
 
     public function employee()

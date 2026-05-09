@@ -77,6 +77,11 @@ class LeaveRequestController extends Controller
      */
     public function index()
     {
+        // Mark all pending requests as viewed by admin
+        Leave_Request::where('status', 'pending')
+            ->where('is_viewed_by_admin', false)
+            ->update(['is_viewed_by_admin' => true]);
+
         $leaveRequests = Leave_Request::with(['employee.department', 'employee.position', 'employee.user'])
             ->orderBy('date_filed', 'desc')
             ->get();

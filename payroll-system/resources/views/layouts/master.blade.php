@@ -311,6 +311,16 @@
             toggleDropdown(profileBtn, profileDropdown, notificationDropdown);
             toggleDropdown(notificationBtn, notificationDropdown, profileDropdown);
 
+            // Hide the notification dot & badge when the bell is clicked
+            if (notificationBtn) {
+                notificationBtn.addEventListener('click', () => {
+                    const dot = notificationBtn.querySelector('.notification-dot');
+                    const badge = document.querySelector('.notification-header .badge-teal');
+                    if (dot) dot.style.display = 'none';
+                    if (badge) badge.style.display = 'none';
+                });
+            }
+
             window.addEventListener('click', () => {
                 if (profileDropdown) profileDropdown.classList.remove('show');
                 if (notificationDropdown) notificationDropdown.classList.remove('show');

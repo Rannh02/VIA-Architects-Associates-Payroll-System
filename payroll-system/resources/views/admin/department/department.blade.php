@@ -83,6 +83,56 @@
     </div>
 </div>
 
+<!-- Add Department Modal -->
+<div id="departmentModal" class="modal-overlay">
+    <div class="modal-content-delete" style="max-width: 520px;">
+        <form action="{{ route('department.store') }}" method="POST">
+            @csrf
+            <div class="modal-inner">
+                <div class="modal-top">
+                    <div class="modal-icon-container" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                        <i data-lucide="building-2" class="h-6 w-6"></i>
+                    </div>
+                    <div class="modal-info">
+                        <h3 class="modal-title">Add Department</h3>
+                        <p class="modal-description">Fill in the details below to create a new department.</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Department Code</label>
+                        <input type="text" name="department_code" class="form-input" placeholder="e.g. HR, IT, FIN" value="{{ old('department_code') }}" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Department Name</label>
+                        <input type="text" name="department_name" class="form-input" placeholder="e.g. Human Resources" value="{{ old('department_name') }}" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Description</label>
+                        <textarea name="description" class="form-input" rows="2" placeholder="Optional description..."
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; resize: none; background: #ffffff;">{{ old('description') }}</textarea>
+                    </div>
+                    <div>
+                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Status</label>
+                        <select name="status" class="form-input" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
+                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                            <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-modal" style="background: #3b82f6; color: white; border-color: #3b82f6;">Add Department</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div id="delete-modal" class="modal-overlay">
     <div class="modal-content-delete">
