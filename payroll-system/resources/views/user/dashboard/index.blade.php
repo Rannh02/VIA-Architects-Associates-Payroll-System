@@ -80,13 +80,13 @@
                     <p class="chart-card-subtitle">Monthly payroll expenses for the current year</p>
                 </div>
                 <div style="display: flex; gap: 1rem;">
-                    <div class="summary-item" style="margin: 0; padding: 1rem;">
-                        <span class="item-label">Latest Payroll</span>
-                        <span class="item-value" style="font-size: 1.25rem;">₱{{ number_format($latestPayrollAmount, 2) }}</span>
+                    <div class="summary-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--bg-surface); border: 1px solid var(--glass-border); padding: 0.75rem 1.25rem; border-radius: 1rem; margin: 0;">
+                        <span class="item-label" style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Latest Payroll</span>
+                        <span class="item-value" style="font-size: 1.125rem; font-weight: 800; color: var(--text-main);">₱{{ number_format($latestPayrollAmount, 2) }}</span>
                     </div>
-                    <div class="summary-item" style="margin: 0; padding: 1rem;">
-                        <span class="item-label">Year to Date (YTD)</span>
-                        <span class="item-value" style="font-size: 1.25rem;">₱{{ number_format($ytdPayroll, 2) }}</span>
+                    <div class="summary-item" style="display: flex; align-items: center; gap: 0.75rem; background: var(--bg-surface); border: 1px solid var(--glass-border); padding: 0.75rem 1.25rem; border-radius: 1rem; margin: 0;">
+                        <span class="item-label" style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Year to Date (YTD)</span>
+                        <span class="item-value" style="font-size: 1.125rem; font-weight: 800; color: var(--text-main);">₱{{ number_format($ytdPayroll, 2) }}</span>
                     </div>
                     <button id="btn-view-payroll" class="btn-view-payroll" style="align-self: center;">
                         <i data-lucide="external-link" class="mr-2 h-4 w-4"></i> View Details

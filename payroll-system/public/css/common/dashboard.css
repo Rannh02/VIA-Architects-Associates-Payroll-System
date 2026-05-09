@@ -1051,7 +1051,7 @@ body {
 .form-input,
 .form-select,
 .form-textarea {
-    background: var(--glass-bg-form);
+    background: #ffffff;
     border: 1px solid var(--glass-border-form);
     border-radius: 0.75rem;
     padding: 0.875rem 1rem;
@@ -1059,6 +1059,14 @@ body {
     font-size: 0.875rem;
     transition: all 0.3s;
     width: 100%;
+}
+
+.dark-mode .form-input,
+.dark-mode .form-select,
+.dark-mode .form-textarea {
+    background: var(--glass-bg-form);
+    border-color: #334155;
+    color: #f8fafc;
 }
 
 .form-input:focus,

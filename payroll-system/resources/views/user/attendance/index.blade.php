@@ -82,12 +82,9 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ Auth::user()->name }}</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: #64748b;">
+                                No attendance records found for the selected period.
+                            </td>
                         </tr>
                     </tbody>
                 </table>
