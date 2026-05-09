@@ -96,6 +96,7 @@ class LeaveRequestController extends Controller
         $leaveRequest->update([
             'status'      => $request->status,
             'approved_by' => Auth::id(),
+            'is_viewed_by_employee' => false,
         ]);
 
         $label = ucfirst($request->status);
