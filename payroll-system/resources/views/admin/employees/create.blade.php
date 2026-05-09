@@ -14,6 +14,12 @@
             </div>
         </div>
 
+        @if($errors->has('error'))
+            <div style="background:#fee2e2;color:#991b1b;border:1px solid #fecaca;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                <i data-lucide="alert-circle" class="h-4 w-4"></i> {{ $errors->first('error') }}
+            </div>
+        @endif
+
         <form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data" class="employee-form">
             @csrf
             <div class="form-grid">
@@ -27,11 +33,9 @@
                         <div class="form-group">
                             <label class="form-label">Employee ID:</label>
                             <input type="text" name="employee_id"
-                                class="form-input @error('employee_id') border-rose-500 @enderror"
-                                placeholder="VIA-2024-XXX" value="{{ old('employee_id') }}">
-                            @error('employee_id')
-                                <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                            @enderror
+                                class="form-input"
+                                value="{{ $nextEmployeeId }}" readonly
+                                style="background-color: #f3f4f6; cursor: not-allowed;">
                         </div>
 
                         <div class="form-row-2">
@@ -269,10 +273,6 @@
                             </div>
                         </div>
 
-                        <div class="form-actions-inline">
-                            <button type="submit" class="btn-primary">Save Employee</button>
-                            <button type="reset" class="btn-secondary">Clear Form</button>
-                        </div>
                     </div>
                 </div>
 
@@ -323,6 +323,18 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Form Actions at the Bottom -->
+            <div class="form-actions-footer">
+                <button type="submit" class="btn-primary px-8 py-3">
+                    <i data-lucide="save" class="h-5 w-5"></i>
+                    Save Employee Record
+                </button>
+                <button type="reset" class="btn-secondary px-8 py-3">
+                    <i data-lucide="rotate-ccw" class="h-5 w-5"></i>
+                    Clear Form
+                </button>
             </div>
         </form>
     </div>
