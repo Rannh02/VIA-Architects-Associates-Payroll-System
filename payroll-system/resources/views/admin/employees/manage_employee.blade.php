@@ -291,6 +291,16 @@
                     Search, filter, and manage your employee records.
                 </p>
             </div>
+            <div style="display: flex; gap: 1rem;">
+                <a href="{{ route('employees.archived') }}" class="btn-secondary" style="display: flex; align-items: center; gap: 0.5rem; background: white; border: 1px solid #e2e8f0; padding: 0.625rem 1.25rem; border-radius: 0.75rem; font-weight: 600; color: #64748b; transition: all 0.2s;">
+                    <i data-lucide="archive" class="h-4 w-4"></i>
+                    View Archives
+                </a>
+                <a href="{{ route('employees.create') }}" class="btn-primary" style="display: flex; align-items: center; gap: 0.5rem; background: #3b82f6; color: white; padding: 0.625rem 1.25rem; border-radius: 0.75rem; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2); transition: all 0.2s;">
+                    <i data-lucide="user-plus" class="h-4 w-4"></i>
+                    Add New Employee
+                </a>
+            </div>
         </div>
 
         <div class="employee-search-container">

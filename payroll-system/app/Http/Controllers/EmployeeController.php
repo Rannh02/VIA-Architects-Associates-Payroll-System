@@ -144,6 +144,19 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         $employee->delete();
-        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+        return redirect()->route('employees.index')->with('success', 'Employee archived successfully.');
+    }
+
+    public function archived()
+    {
+        $employees = Employee::onlyTrashed()->with(['department', 'position', 'user'])->get();
+        return view('admin.employees.archived_employees', compact('employees'));
+    }
+
+    public function restore($id)
+    {
+        $employee = Employee::withTrashed()->findOrFail($id);
+        $employee->restore();
+        return redirect()->route('employees.archived')->with('success', 'Employee restored successfully.');
     }
 }   

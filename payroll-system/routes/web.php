@@ -78,11 +78,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-requests', [LeaveRequestController::class, 'myRequests'])->name('user.my_requests');
 
 
-   // route for employee controller
+    // route for employee controller
     Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('/employees/archived', [EmployeeController::class, 'archived'])->name('employees.archived');
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+    Route::post('/employees/{id}/restore', [EmployeeController::class, 'restore'])->name('employees.restore');
     Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
     // route for department controller
