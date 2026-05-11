@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
                 if ($user->role === 'admin') {
                     $pendingLeaves = \App\Models\Leave_Request::with('employee')
                         ->where('status', 'pending')
-                        ->where('is_viewed_by_admin', false)
+                        ->where('is_cleared_by_admin', false)
                         ->latest()
                         ->take(5)
                         ->get();
@@ -40,13 +40,16 @@ class AppServiceProvider extends ServiceProvider
                     if ($employee) {
                         $processedLeaves = \App\Models\Leave_Request::where('employee_id', $employee->employee_id)
                             ->whereIn('status', ['approved', 'rejected'])
-                            ->where('is_viewed_by_employee', false)
+                            ->where('is_cleared_by_employee', false)
                             ->latest()
                             ->take(5)
                             ->get();
                         
                         $view->with([
-                            'pendingLeaveCount' => $processedLeaves->count(),
+                            'pendingLeaveCount' => \App\Models\Leave_Request::where('employee_id', $employee->employee_id)
+                                ->whereIn('status', ['approved', 'rejected'])
+                                ->where('is_viewed_by_employee', false)
+                                ->count(),
                             'recentPendingLeaves' => $processedLeaves
                         ]);
                     } else {

@@ -12,6 +12,9 @@ class LeaveRequestController extends Controller
     /**
      * Employee: Show my own leave requests (Approval Workflow for Employee).
      */
+    /**
+     * Employee: Show my own leave requests (Approval Workflow for Employee).
+     */
     public function myRequests()
     {
         $employee = Employee::where('user_id', Auth::id())->first();
@@ -21,12 +24,9 @@ class LeaveRequestController extends Controller
             $leaveRequests = Leave_Request::where('employee_id', $employee->employee_id)
                 ->latest()
                 ->get();
-
-            // Mark processed requests as viewed
-            Leave_Request::where('employee_id', $employee->employee_id)
-                ->whereIn('status', ['approved', 'rejected'])
-                ->where('is_viewed_by_employee', false)
-                ->update(['is_viewed_by_employee' => true]);
+            
+            // Note: Auto-marking as viewed is removed to keep notifications in dropdown
+            // until explicitly cleared by the user.
         }
 
         return view('user.my_requests.index', compact('leaveRequests'));
@@ -77,11 +77,7 @@ class LeaveRequestController extends Controller
      */
     public function index()
     {
-        // Mark all pending requests as viewed by admin
-        Leave_Request::where('status', 'pending')
-            ->where('is_viewed_by_admin', false)
-            ->update(['is_viewed_by_admin' => true]);
-
+        // Note: Auto-marking as viewed is removed to keep notifications in dropdown
         $leaveRequests = Leave_Request::with(['employee.department', 'employee.position', 'employee.user'])
             ->orderBy('date_filed', 'desc')
             ->get();
@@ -102,10 +98,54 @@ class LeaveRequestController extends Controller
             'status'      => $request->status,
             'approved_by' => Auth::id(),
             'is_viewed_by_employee' => false,
+            'is_cleared_by_employee' => false, // Reset cleared status when updated
         ]);
 
         $label = ucfirst($request->status);
         return redirect()->route('approval_workflow.index')
             ->with('success', "Leave request {$label} successfully.");
+    }
+
+    public function clearNotifications()
+    {
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            Leave_Request::where('status', 'pending')
+                ->update([
+                    'is_viewed_by_admin' => true,
+                    'is_cleared_by_admin' => true
+                ]);
+        } else {
+            $employee = Employee::where('user_id', $user->id)->first();
+            if ($employee) {
+                Leave_Request::where('employee_id', $employee->employee_id)
+                    ->whereIn('status', ['approved', 'rejected'])
+                    ->update([
+                        'is_viewed_by_employee' => true,
+                        'is_cleared_by_employee' => true
+                    ]);
+            }
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function markAsViewed()
+    {
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            Leave_Request::where('status', 'pending')
+                ->where('is_viewed_by_admin', false)
+                ->update(['is_viewed_by_admin' => true]);
+        } else {
+            $employee = Employee::where('user_id', $user->id)->first();
+            if ($employee) {
+                Leave_Request::where('employee_id', $employee->employee_id)
+                    ->whereIn('status', ['approved', 'rejected'])
+                    ->where('is_viewed_by_employee', false)
+                    ->update(['is_viewed_by_employee' => true]);
+            }
+        }
+        return response()->json(['success' => true]);
     }
 }

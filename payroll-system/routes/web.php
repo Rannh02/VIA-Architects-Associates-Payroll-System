@@ -126,6 +126,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/approval_workflow', [LeaveRequestController::class, 'index'])->name('approval_workflow.index');
     Route::patch('/approval_workflow/{leaveRequest}/status', [LeaveRequestController::class, 'updateStatus'])->name('approval_workflow.status');
 
+    Route::post('/notifications/clear', [LeaveRequestController::class, 'clearNotifications'])->name('notifications.clear');
+    Route::post('/notifications/mark-as-viewed', [LeaveRequestController::class, 'markAsViewed'])->name('notifications.viewed');
+
     Route::get('/reports', function () {
         return view('admin.reports.reports');
     })->name('reports.index');

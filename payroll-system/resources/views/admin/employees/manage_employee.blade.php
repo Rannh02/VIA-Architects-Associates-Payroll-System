@@ -103,6 +103,10 @@
             background: #b91c1c;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
         /* View Modal - Enterprise Redesign */
         .modal-content-view {
             max-width: 750px;
@@ -375,16 +379,16 @@
                                             'id' => $employee->employee_number ?? 'E' . str_pad($employee->employee_id, 3, '0', STR_PAD_LEFT),
                                             'name' => $employee->first_name . ' ' . $employee->last_name,
                                             'photo_url' => $employee->photo_url,
-                                            'email' => $employee->email ?? 'N/A',
-                                            'phone' => $employee->phone ?? 'N/A',
+                                            'email' => $employee->user->email ?? 'N/A',
+                                            'phone' => $employee->contact_info ?? 'N/A',
                                             'position' => $employee->position->position_name ?? 'N/A',
                                             'department' => $employee->department->department_name ?? 'N/A',
                                             'salary' => '₱' . number_format($employee->salary_rate ?? $employee->position->basic_salary ?? 0, 2),
                                             'status' => $employee->employment_status ?? 'Regular',
-                                            'hire_date' => $employee->hire_date ? \Carbon\Carbon::parse($employee->hire_date)->format('M d, Y') : 'N/A',
+                                            'hire-date' => $employee->hire_date ? \Carbon\Carbon::parse($employee->hire_date)->format('M d, Y') : 'N/A',
                                             'sex' => $employee->sex ?? 'N/A',
                                             'birth' => $employee->date_of_birth ? \Carbon\Carbon::parse($employee->date_of_birth)->format('M d, Y') : 'N/A',
-                                            'address' => ($employee->current_street_address ?? '') . ' ' . ($employee->current_barangay ?? '') . ' ' . ($employee->current_city ?? ''),
+                                            'address' => ($employee->current_street_address ?? '') . ' ' . ($employee->current_barangay ?? '') . ' ' . ($employee->current_city_municipality ?? ''),
                                             'sss' => $employee->sss_num ?? 'N/A',
                                             'philhealth' => $employee->philhealth_num ?? 'N/A',
                                             'pagibig' => $employee->pagibig_num ?? 'N/A'
@@ -488,7 +492,7 @@
                         </div>
                     </div>
                     <div class="view-card">
-                        <div class="view-card-icon"><i data-lucide="venus-mars"></i></div>
+                        <div class="view-card-icon"><i data-lucide="users"></i></div>
                         <div class="view-card-content">
                             <p class="view-card-label">Sex</p>
                             <p class="view-card-value" id="view-sex">---</p>

@@ -53,14 +53,17 @@
 
                     <!-- Notification Dropdown -->
                     <div id="notification-dropdown" class="dropdown-menu notification-dropdown">
-                        <div class="notification-header">
-                            <h3 class="dropdown-label" style="margin: 0;">Notifications</h3>
-                            @if($pendingLeaveCount > 0)
-                                <span class="badge-teal" style="font-size: 10px; padding: 2px 6px;">{{ $pendingLeaveCount }} New</span>
-                            @endif
+                        <div class="notification-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.75rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <h3 class="dropdown-label" style="margin: 0;">Notifications</h3>
+                                @if($pendingLeaveCount > 0)
+                                    <span class="badge-teal" id="notif-badge" style="font-size: 10px; padding: 2px 6px;">{{ $pendingLeaveCount }} New</span>
+                                @endif
+                            </div>
+                            <button onclick="clearAllNotifications(event)" class="text-xs font-bold hover:underline" style="background: none; border: none; cursor: pointer; padding: 0; color: #3b82f6;">Clear All</button>
                         </div>
                         
-                        <div class="notification-list">
+                        <div class="notification-list" id="notification-list">
                             @forelse($recentPendingLeaves as $leave)
                                 @php
                                     $isAdmin = Auth::user()->role === 'admin';
@@ -86,18 +89,19 @@
                                     </div>
                                 </a>
                             @empty
-                                <div class="empty-notifications">
+                                <div class="empty-notifications" id="empty-notif-msg">
                                     <i data-lucide="bell-off" class="h-8 w-8 mb-2" style="opacity: 0.3;"></i>
                                     <p style="font-size: 0.875rem;">No new notifications</p>
                                 </div>
                             @endforelse
                         </div>
 
-                        @if($pendingLeaveCount > 0)
-                            <div class="notification-footer">
-                                <a href="{{ route('approval_workflow.index') }}" class="view-all-link">View All Requests</a>
-                            </div>
-                        @endif
+                        <div class="notification-footer" id="notif-footer" style="{{ $pendingLeaveCount > 0 || count($recentPendingLeaves) > 0 ? '' : 'display: none;' }}">
+                            @php
+                                $viewAllRoute = Auth::user()->role === 'admin' ? route('approval_workflow.index') : route('user.my_requests');
+                            @endphp
+                            <a href="{{ $viewAllRoute }}" class="view-all-link">View All Requests</a>
+                        </div>
                     </div>
                 </div>
 
@@ -298,28 +302,79 @@
             const notificationBtn = document.getElementById('notification-btn');
             const notificationDropdown = document.getElementById('notification-dropdown');
 
-            const toggleDropdown = (btn, dropdown, otherDropdown) => {
-                if (btn && dropdown) {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (otherDropdown) otherDropdown.classList.remove('show');
-                        dropdown.classList.toggle('show');
+            // Profile Dropdown Logic
+            if (profileBtn) {
+                profileBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (notificationDropdown) notificationDropdown.classList.remove('show');
+                    profileDropdown.classList.toggle('show');
+                });
+            }
+
+            // Notification Logic
+            if (notificationBtn) {
+                notificationBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (profileDropdown) profileDropdown.classList.remove('show');
+                    notificationDropdown.classList.toggle('show');
+                    
+                    // Mark as viewed when opening the dropdown
+                    if (notificationDropdown.classList.contains('show')) {
+                        markNotificationsAsViewed();
+                    }
+                });
+            }
+
+            window.markNotificationsAsViewed = () => {
+                const dot = document.querySelector('.notification-dot');
+                const badge = document.getElementById('notif-badge');
+                
+                if (dot || badge) {
+                    fetch('{{ route("notifications.viewed") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        }
+                    }).then(res => {
+                        if (res.ok) {
+                            if (dot) dot.style.display = 'none';
+                            if (badge) badge.style.display = 'none';
+                        }
                     });
                 }
             };
 
-            toggleDropdown(profileBtn, profileDropdown, notificationDropdown);
-            toggleDropdown(notificationBtn, notificationDropdown, profileDropdown);
+            window.clearAllNotifications = (e) => {
+                e.stopPropagation();
+                if (!confirm('Clear all notifications?')) return;
 
-            // Hide the notification dot & badge when the bell is clicked
-            if (notificationBtn) {
-                notificationBtn.addEventListener('click', () => {
-                    const dot = notificationBtn.querySelector('.notification-dot');
-                    const badge = document.querySelector('.notification-header .badge-teal');
-                    if (dot) dot.style.display = 'none';
-                    if (badge) badge.style.display = 'none';
+                fetch('{{ route("notifications.clear") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                }).then(res => {
+                    if (res.ok) {
+                        const list = document.getElementById('notification-list');
+                        const footer = document.getElementById('notif-footer');
+                        const dot = document.querySelector('.notification-dot');
+                        const badge = document.getElementById('notif-badge');
+                        
+                        list.innerHTML = `
+                            <div class="empty-notifications" id="empty-notif-msg">
+                                <i data-lucide="bell-off" class="h-8 w-8 mb-2" style="opacity: 0.3;"></i>
+                                <p style="font-size: 0.875rem;">No new notifications</p>
+                            </div>
+                        `;
+                        if (footer) footer.style.display = 'none';
+                        if (dot) dot.style.display = 'none';
+                        if (badge) badge.style.display = 'none';
+                        if (window.lucide) window.lucide.createIcons();
+                    }
                 });
-            }
+            };
 
             window.addEventListener('click', () => {
                 if (profileDropdown) profileDropdown.classList.remove('show');
