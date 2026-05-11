@@ -70,6 +70,29 @@
             </div>
         </div>
 
+        <!-- Analytics Section -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="activity-container" style="margin-top: 0;">
+                <div class="activity-header">
+                    <h3 class="activity-title">Payroll Expense Overview</h3>
+                    <div class="stat-badge badge-teal">Monthly</div>
+                </div>
+                <div style="height: 300px; padding: 1rem;">
+                    <canvas id="payrollChart"></canvas>
+                </div>
+            </div>
+
+            <div class="activity-container" style="margin-top: 0;">
+                <div class="activity-header">
+                    <h3 class="activity-title">Leave Request Status</h3>
+                    <div class="stat-badge badge-indigo">Distribution</div>
+                </div>
+                <div style="height: 300px; padding: 1rem; display: flex; justify-content: center;">
+                    <canvas id="leaveChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- Recent Activity Section -->
         <div class="activity-container">
             <div class="activity-header">
@@ -116,4 +139,73 @@
             @endif
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Payroll Chart
+            const payrollCtx = document.getElementById('payrollChart').getContext('2d');
+            new Chart(payrollCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Expense (₱)',
+                        data: [120000, 150000, 140000, 180000, 170000, 210000],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 8,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Leave Distribution Chart
+            const leaveCtx = document.getElementById('leaveChart').getContext('2d');
+            new Chart(leaveCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approved', 'Pending', 'Rejected'],
+                    datasets: [{
+                        data: [65, 20, 15],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: { family: 'Inter', size: 12 }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+    </script>
 @endsection
