@@ -9,7 +9,7 @@
 @section('content')
 <div class="profile-settings-container">
     <!-- Header Section -->
-    <div class="content-header" style="margin-bottom: 2rem;">
+    <div class="content-header">
         <div>
             <h2 class="header-title">Admin Account Settings</h2>
             <p class="header-subtitle">

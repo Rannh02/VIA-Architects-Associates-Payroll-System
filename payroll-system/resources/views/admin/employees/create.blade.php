@@ -2,6 +2,10 @@
 
 @section('title', 'Create Employee - VIA Architects Associates')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/admin/employee-form.css') }}">
+@endsection
+
 @section('content')
     <div class="max-w-5xl mx-auto">
         {{-- Page Header --}}

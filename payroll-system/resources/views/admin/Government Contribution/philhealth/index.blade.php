@@ -3,22 +3,18 @@
 @section('title', 'PhilHealth Contributions')
 
 @section('styles')
+    <link rel="stylesheet" href="{{ asset('css/common/modals.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/common/tables.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/govt-contributions.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/department.css') }}">
-    <style>
-        .govt-container { max-width: 900px; margin: 0 auto; }
-        .govt-header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .govt-header-container h2 { font-size: 1.5rem; font-weight: 700; margin: 0; }
-        .govt-header-container p  { color: var(--text-muted, #64748b); margin: 0; font-size: 0.9rem; }
-        .badge-ph { background: #dcfce7; color: #15803d; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-    </style>
 @endsection
 
 @section('content')
 <div class="govt-container">
-    <div class="govt-header-container">
-        <div class="header-content">
-            <h2>PhilHealth Contributions</h2>
-            <p>Manage PhilHealth contribution brackets</p>
+    <div class="content-header">
+        <div>
+            <h2 class="header-title">PhilHealth Contributions</h2>
+            <p class="header-subtitle">Manage PhilHealth contribution brackets</p>
         </div>
         <button class="btn-primary" onclick="openModal()">
             <i data-lucide="plus"></i> Add Bracket

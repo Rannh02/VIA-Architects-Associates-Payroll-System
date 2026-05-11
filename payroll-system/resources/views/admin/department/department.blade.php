@@ -3,22 +3,23 @@
 @section('title', 'Departments')
 
 @section('styles')
+    <link rel="stylesheet" href="{{ asset('css/common/modals.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/common/tables.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/department.css') }}">
 @endsection
 
 @section('content')
-<div class="department-container max-w-7xl mx-auto">
-    <div class="department-header-container">
-        <div class="header-content">
-            <h2>Departments</h2>
-            <p>Manage company departments</p>
+<div class="govt-container">
+    <div class="content-header">
+        <div>
+            <h2 class="header-title">Departments</h2>
+            <p class="header-subtitle">Manage organizational departments and structures</p>
         </div>
         <button class="btn-primary" onclick="openModal()">
             <i data-lucide="plus"></i> Add Department
         </button>
     </div>
 
-    {{-- Success / Error Flash Messages --}}
     @if(session('success'))
         <div class="alert alert-success">
             <i data-lucide="check-circle"></i> {{ session('success') }}
@@ -28,11 +29,7 @@
     @if($errors->any())
         <div class="alert alert-error">
             <i data-lucide="alert-circle"></i>
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+            <ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
         </div>
     @endif
 
@@ -40,7 +37,6 @@
         <table class="department-table">
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>Code</th>
                     <th>Department Name</th>
                     <th>Description</th>
@@ -49,30 +45,29 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($departments as $index => $department)
+                @forelse($departments as $dept)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td><span class="badge badge-code">{{ $department->department_code }}</span></td>
-                        <td class="font-medium">{{ $department->department_name }}</td>
-                        <td>{{ $department->description ?? '—' }}</td>
+                        <td><span class="badge-sss">{{ $dept->department_code }}</span></td>
+                        <td style="font-weight: 600; color: var(--text-main);">{{ $dept->department_name }}</td>
+                        <td style="color: var(--text-muted);">{{ Str::limit($dept->description, 50) }}</td>
                         <td>
-                            <span class="badge {{ $department->status === 'Active' ? 'badge-active' : 'badge-inactive' }}">
-                                {{ $department->status }}
+                            <span class="status-badge badge-{{ strtolower($dept->status) }}">
+                                {{ $dept->status }}
                             </span>
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button type="button" 
-                                        class="department-action-link delete-link" 
-                                        onclick="openDeleteModal('{{ $department->department_id }}', '{{ $department->department_name }}')">
-                                    Delete
-                                </button>
+                                <form action="{{ route('department.destroy', $dept->department_id) }}" method="POST"
+                                    onsubmit="return confirm('Delete this department?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="department-action-link delete-link">Delete</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="empty-state">No departments found. Click <strong>Add Department</strong> to get started.</td>
+                        <td colspan="5" class="empty-state">No departments found. Click <strong>Add Department</strong> to get started.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -80,200 +75,41 @@
     </div>
 </div>
 
-    </div>
-</div>
-
-<!-- Add Department Modal -->
-<div id="departmentModal" class="modal-overlay">
-    <div class="modal-content-delete" style="max-width: 520px;">
-        <form action="{{ route('department.store') }}" method="POST">
+{{-- Add Modal --}}
+<div id="departmentModal" class="modal-backdrop">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Add Department</h3>
+            <button class="btn-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+        </div>
+        <form class="modal-form" action="{{ route('department.store') }}" method="POST">
             @csrf
-            <div class="modal-inner">
-                <div class="modal-top">
-                    <div class="modal-icon-container" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                        <i data-lucide="building-2" class="h-6 w-6"></i>
-                    </div>
-                    <div class="modal-info">
-                        <h3 class="modal-title">Add Department</h3>
-                        <p class="modal-description">Fill in the details below to create a new department.</p>
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Department Code</label>
-                        <input type="text" name="department_code" class="form-input" placeholder="e.g. HR, IT, FIN" value="{{ old('department_code') }}" required
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Department Name</label>
-                        <input type="text" name="department_name" class="form-input" placeholder="e.g. Human Resources" value="{{ old('department_name') }}" required
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Description</label>
-                        <textarea name="description" class="form-input" rows="2" placeholder="Optional description..."
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; resize: none; background: #ffffff;">{{ old('description') }}</textarea>
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Status</label>
-                        <select name="status" class="form-input" required
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                            <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label>Department Code <span class="required">*</span></label>
+                <input type="text" name="department_code" class="form-input" placeholder="e.g. ENG" value="{{ old('department_code') }}" required>
+            </div>
+            <div class="form-group">
+                <label>Department Name <span class="required">*</span></label>
+                <input type="text" name="department_name" class="form-input" placeholder="e.g. Engineering" value="{{ old('department_name') }}" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-input" style="height: 100px;" placeholder="Brief description...">{{ old('description') }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Status <span class="required">*</span></label>
+                <select name="status" class="form-select" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-modal-secondary" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-modal" style="background: #3b82f6; color: white; border-color: #3b82f6;">Add Department</button>
+                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Department</button>
             </div>
         </form>
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<div id="delete-modal" class="modal-overlay">
-    <div class="modal-content-delete">
-        <div class="modal-inner">
-            <div class="modal-top">
-                <div class="modal-icon-container">
-                    <i data-lucide="alert-triangle" class="h-6 w-6"></i>
-                </div>
-                <div class="modal-info">
-                    <h3 class="modal-title">Delete Department</h3>
-                    <p class="modal-description">
-                        Are you sure you want to delete <strong id="delete-item-name" style="color: inherit; font-weight: 700;"></strong>? 
-                        This action cannot be undone and may affect associated records.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn-modal btn-modal-secondary" onclick="closeDeleteModal()">Cancel</button>
-            <form id="delete-form" method="POST" style="margin: 0;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-modal btn-modal-danger">Delete Department</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<style>
-    /* Professional Modal Styles */
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.4);
-        backdrop-filter: blur(4px);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1100;
-        opacity: 0;
-        transition: all 0.2s ease-out;
-    }
-    .modal-overlay.show {
-        display: flex;
-        opacity: 1;
-    }
-    .modal-content-delete {
-        background: white;
-        width: 95%;
-        max-width: 440px;
-        border-radius: 1rem;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        transform: scale(0.95);
-        transition: all 0.2s ease-out;
-        border: 1px solid #e2e8f0;
-        overflow: hidden;
-    }
-    .modal-overlay.show .modal-content-delete {
-        transform: scale(1);
-    }
-    .modal-inner {
-        padding: 1.5rem;
-    }
-    .modal-top {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-    }
-    .modal-icon-container {
-        flex-shrink: 0;
-        width: 2.75rem;
-        height: 2.75rem;
-        background: #fee2e2;
-        color: #dc2626;
-        border-radius: 0.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-info {
-        flex: 1;
-    }
-    .modal-title {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.375rem;
-    }
-    .modal-description {
-        color: #64748b;
-        font-size: 0.875rem;
-        line-height: 1.5;
-    }
-    .modal-footer {
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.75rem;
-        border-top: 1px solid #e2e8f0;
-    }
-    .btn-modal {
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.15s;
-        border: 1px solid transparent;
-    }
-    .btn-modal-secondary {
-        background: white;
-        border-color: #e2e8f0;
-        color: #475569;
-    }
-    .btn-modal-secondary:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-    }
-    .btn-modal-danger {
-        background: #dc2626;
-        color: white;
-    }
-    .btn-modal-danger:hover {
-        background: #b91c1c;
-    }
-
-    /* Dark Mode */
-    .dark-mode .modal-content-delete {
-        background: #1e293b;
-        border-color: #334155;
-    }
-    .dark-mode .modal-inner { background: #1e293b; }
-    .dark-mode .modal-title { color: #f8fafc; }
-    .dark-mode .modal-description { color: #94a3b8; }
-    .dark-mode .modal-footer { background: #0f172a; border-color: #334155; }
-    .dark-mode .modal-icon-container { background: rgba(220, 38, 38, 0.1); }
-    .dark-mode .btn-modal-secondary { background: #1e293b; border-color: #334155; color: #f8fafc; }
-    .dark-mode .btn-modal-secondary:hover { background: #334155; }
-</style>
 @endsection
 
 @section('scripts')
@@ -289,41 +125,15 @@
         document.getElementById('departmentModal').classList.remove('show');
     }
 
-    // Delete Modal Logic
-    function openDeleteModal(id, name) {
-        const modal = document.getElementById('delete-modal');
-        const form = document.getElementById('delete-form');
-        const nameDisplay = document.getElementById('delete-item-name');
-        
-        form.action = `/department/${id}`; // Adjust based on your actual route
-        nameDisplay.textContent = name;
-        
-        modal.classList.add('show');
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-modal').classList.remove('show');
-    }
-
     window.onclick = function(event) {
-        const addModal = document.getElementById('departmentModal');
-        const deleteModal = document.getElementById('delete-modal');
-        if (event.target == addModal) closeModal();
-        if (event.target == deleteModal) closeDeleteModal();
+        const modal = document.getElementById('departmentModal');
+        if (event.target == modal) closeModal();
     }
 
-    // Close on Escape key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
-            closeDeleteModal();
-        }
+        if (e.key === 'Escape') closeModal();
     });
 
-    // Re-open modal if there are validation errors
     @if($errors->any())
         document.addEventListener('DOMContentLoaded', () => openModal());
     @endif

@@ -43,7 +43,7 @@
             </div>
 
             <div class="nav-actions">
-                <div class="profile-container" style="position: relative;">
+                <div class="profile-container">
                     <button id="notification-btn" class="icon-btn">
                         <i data-lucide="bell" class="h-5 w-5"></i>
                         @if($pendingLeaveCount > 0)
@@ -53,14 +53,14 @@
 
                     <!-- Notification Dropdown -->
                     <div id="notification-dropdown" class="dropdown-menu notification-dropdown">
-                        <div class="notification-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.75rem;">
+                        <div class="notification-header">
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <h3 class="dropdown-label" style="margin: 0;">Notifications</h3>
                                 @if($pendingLeaveCount > 0)
-                                    <span class="badge-teal" id="notif-badge" style="font-size: 10px; padding: 2px 6px;">{{ $pendingLeaveCount }} New</span>
+                                    <span class="badge-teal" id="notif-badge">{{ $pendingLeaveCount }} New</span>
                                 @endif
                             </div>
-                            <button onclick="clearAllNotifications(event)" class="text-xs font-bold hover:underline" style="background: none; border: none; cursor: pointer; padding: 0; color: #3b82f6;">Clear All</button>
+                            <button onclick="clearAllNotifications(event)" class="text-xs font-bold hover:underline btn-clear-all">Clear All</button>
                         </div>
                         
                         <div class="notification-list" id="notification-list">
@@ -90,13 +90,13 @@
                                 </a>
                             @empty
                                 <div class="empty-notifications" id="empty-notif-msg">
-                                    <i data-lucide="bell-off" class="h-8 w-8 mb-2" style="opacity: 0.3;"></i>
-                                    <p style="font-size: 0.875rem;">No new notifications</p>
+                                    <i data-lucide="bell-off" class="h-8 w-8 mb-2"></i>
+                                    <p>No new notifications</p>
                                 </div>
                             @endforelse
                         </div>
 
-                        <div class="notification-footer" id="notif-footer" style="{{ $pendingLeaveCount > 0 || count($recentPendingLeaves) > 0 ? '' : 'display: none;' }}">
+                        <div id="notif-footer" class="notification-footer {{ $pendingLeaveCount > 0 || count($recentPendingLeaves) > 0 ? '' : 'hidden' }}">
                             @php
                                 $viewAllRoute = Auth::user()->role === 'admin' ? route('approval_workflow.index') : route('user.my_requests');
                             @endphp
@@ -143,8 +143,7 @@
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="dropdown-item dropdown-logout"
-                                style="color: #f87171; width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                            <button type="submit" class="dropdown-item dropdown-logout">
                                 <i data-lucide="log-out" class="h-4 w-4"></i>
                                 Log Out
                             </button>
@@ -338,8 +337,8 @@
                         }
                     }).then(res => {
                         if (res.ok) {
-                            if (dot) dot.style.display = 'none';
-                            if (badge) badge.style.display = 'none';
+                            if (dot) dot.classList.add('hidden');
+                            if (badge) badge.classList.add('hidden');
                         }
                     });
                 }
@@ -364,13 +363,13 @@
                         
                         list.innerHTML = `
                             <div class="empty-notifications" id="empty-notif-msg">
-                                <i data-lucide="bell-off" class="h-8 w-8 mb-2" style="opacity: 0.3;"></i>
-                                <p style="font-size: 0.875rem;">No new notifications</p>
+                                <i data-lucide="bell-off" class="h-8 w-8 mb-2"></i>
+                                <p>No new notifications</p>
                             </div>
                         `;
-                        if (footer) footer.style.display = 'none';
-                        if (dot) dot.style.display = 'none';
-                        if (badge) badge.style.display = 'none';
+                        if (footer) footer.classList.add('hidden');
+                        if (dot) dot.classList.add('hidden');
+                        if (badge) badge.classList.add('hidden');
                         if (window.lucide) window.lucide.createIcons();
                     }
                 });

@@ -3,280 +3,140 @@
 @section('title', 'Positions')
 
 @section('styles')
+    <link rel="stylesheet" href="{{ asset('css/common/modals.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/common/tables.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/position.css') }}">
 @endsection
 
 @section('content')
-<div class="position-container max-w-7xl mx-auto">
-    <div class="position-header-container">
-        <div class="header-content">
-            <h2>Positions</h2>
-            <p>Manage job positions per department</p>
+<div class="govt-container">
+    <div class="content-header">
+        <div>
+            <h2 class="header-title">Positions</h2>
+            <p class="header-subtitle">Manage job roles and compensation structures</p>
         </div>
         <button class="btn-primary" onclick="openModal()">
             <i data-lucide="plus"></i> Add Position
         </button>
     </div>
 
-    <div class="position-table-container">
-        <table class="position-table">
+    @if(session('success'))
+        <div class="alert alert-success">
+            <i data-lucide="check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-error">
+            <i data-lucide="alert-circle"></i>
+            <ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+        </div>
+    @endif
+
+    <div class="department-table-container">
+        <table class="department-table">
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>Code</th>
-                    <th>Position name</th>
+                    <th>Position Name</th>
                     <th>Department</th>
-                    <th>Description</th>
                     <th>Basic Salary</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($positions as $index => $position)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td><span class="badge badge-code">{{ $position->position_code }}</span></td>
-                    <td class="font-medium">{{ $position->position_name }}</td>
-                    <td><span class="badge badge-hr">{{ $position->department->department_name ?? '—' }}</span></td>
-                    <td>{{ $position->description ?? '__' }}</td>
-                    <td>{{ $position->basic_salary }}</td>
-                    <td>
-                        <span class="badge {{ $position->status == 'Active' ? 'badge-active' : 'badge-inactive' }}">
-                        {{ $position->status }}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button type="button" 
-                                    class="position-action-link delete-link" 
-                                    onclick="openDeleteModal('{{ $position->position_id }}', '{{ $position->position_name }}')">
-                                Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="8" class="text-center py-4 text-gray-500 dark:text-gray-400">No position found.</td>
-                </tr>
-            @endforelse
+                @forelse($positions as $pos)
+                    <tr>
+                        <td><span class="badge-sss">{{ $pos->position_code }}</span></td>
+                        <td style="font-weight: 600; color: var(--text-main);">{{ $pos->position_name }}</td>
+                        <td>
+                            @if($pos->department)
+                                <span class="department-badge badge-{{ strtolower(str_replace(' ', '-', $pos->department->department_name)) }}">
+                                    {{ $pos->department->department_name }}
+                                </span>
+                            @else
+                                <span style="color: var(--text-muted);">N/A</span>
+                            @endif
+                        </td>
+                        <td style="font-weight: 700; color: #059669;">₱{{ number_format($pos->basic_salary, 2) }}</td>
+                        <td>
+                            <span class="status-badge badge-{{ strtolower($pos->status) }}">
+                                {{ $pos->status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <form action="{{ route('position.destroy', $pos->position_id) }}" method="POST"
+                                    onsubmit="return confirm('Delete this position?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="department-action-link delete-link">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="empty-state">No positions found. Click <strong>Add Position</strong> to get started.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
 </div>
 
-    </div>
-</div>
-
-<!-- Add Position Modal -->
-<div id="positionModal" class="modal-overlay">
-    <div class="modal-content-delete" style="max-width: 520px;">
-        <form action="{{ route('position.store') }}" method="POST">
+{{-- Add Modal --}}
+<div id="positionModal" class="modal-backdrop">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Add Position</h3>
+            <button class="btn-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+        </div>
+        <form class="modal-form" action="{{ route('position.store') }}" method="POST">
             @csrf
-            <div class="modal-inner">
-                <div class="modal-top">
-                    <div class="modal-icon-container" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                        <i data-lucide="briefcase" class="h-6 w-6"></i>
-                    </div>
-                    <div class="modal-info">
-                        <h3 class="modal-title">Add Position</h3>
-                        <p class="modal-description">Fill in the details below to create a new position.</p>
-                    </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Position Code <span class="required">*</span></label>
+                    <input type="text" name="position_code" class="form-input" placeholder="e.g. DEV" value="{{ old('position_code') }}" required>
                 </div>
-
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Position Code</label>
-                        <input type="text" name="position_code" class="form-input" placeholder="e.g. DEV, PM, QA" value="{{ old('position_code') }}" required
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Position Name</label>
-                        <input type="text" name="position_name" class="form-input" placeholder="e.g. Software Developer" value="{{ old('position_name') }}" required
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Department</label>
-                        <select name="department_id" class="form-input"
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                            <option value="">— Select Department —</option>
-                            @foreach($departments as $department)
-                                <option value="{{ $department->department_id }}" {{ old('department_id') == $department->department_id ? 'selected' : '' }}>
-                                    {{ $department->department_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Basic Salary</label>
-                        <input type="number" name="basic_salary" class="form-input" placeholder="e.g. 25000" value="{{ old('basic_salary') }}" required step="0.01" min="0"
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Description</label>
-                        <textarea name="description" class="form-input" rows="2" placeholder="Optional description..."
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; resize: none; background: #ffffff;">{{ old('description') }}</textarea>
-                    </div>
-                    <div>
-                        <label class="form-label" style="display: block; margin-bottom: 0.375rem; font-size: 0.8rem; font-weight: 600; color: #475569;">Status</label>
-                        <select name="status" class="form-input" required
-                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; background: #ffffff;">
-                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                            <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label>Position Name <span class="required">*</span></label>
+                    <input type="text" name="position_name" class="form-input" placeholder="e.g. Developer" value="{{ old('position_name') }}" required>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Department</label>
+                    <select name="department_id" class="form-select">
+                        <option value="">Select Department</option>
+                        @foreach($departments as $dept)
+                            <option value="{{ $dept->department_id }}" {{ old('department_id') == $dept->department_id ? 'selected' : '' }}>{{ $dept->department_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Basic Salary (₱) <span class="required">*</span></label>
+                    <input type="number" step="0.01" name="basic_salary" class="form-input" placeholder="e.g. 25000.00" value="{{ old('basic_salary') }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-input" style="height: 80px;" placeholder="Brief description...">{{ old('description') }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Status <span class="required">*</span></label>
+                <select name="status" class="form-select" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-modal-secondary" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-modal" style="background: #3b82f6; color: white; border-color: #3b82f6;">Add Position</button>
+                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Position</button>
             </div>
         </form>
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<div id="delete-modal" class="modal-overlay">
-    <div class="modal-content-delete">
-        <div class="modal-inner">
-            <div class="modal-top">
-                <div class="modal-icon-container">
-                    <i data-lucide="alert-triangle" class="h-6 w-6"></i>
-                </div>
-                <div class="modal-info">
-                    <h3 class="modal-title">Delete Position</h3>
-                    <p class="modal-description">
-                        Are you sure you want to delete <strong id="delete-item-name" style="color: inherit; font-weight: 700;"></strong>? 
-                        This action cannot be undone and may affect associated employee records.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn-modal btn-modal-secondary" onclick="closeDeleteModal()">Cancel</button>
-            <form id="delete-form" method="POST" style="margin: 0;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-modal btn-modal-danger">Delete Position</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<style>
-    /* Professional Modal Styles */
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.4);
-        backdrop-filter: blur(4px);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1100;
-        opacity: 0;
-        transition: all 0.2s ease-out;
-    }
-    .modal-overlay.show {
-        display: flex;
-        opacity: 1;
-    }
-    .modal-content-delete {
-        background: white;
-        width: 95%;
-        max-width: 440px;
-        border-radius: 1rem;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        transform: scale(0.95);
-        transition: all 0.2s ease-out;
-        border: 1px solid #e2e8f0;
-        overflow: hidden;
-    }
-    .modal-overlay.show .modal-content-delete {
-        transform: scale(1);
-    }
-    .modal-inner {
-        padding: 1.5rem;
-    }
-    .modal-top {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-    }
-    .modal-icon-container {
-        flex-shrink: 0;
-        width: 2.75rem;
-        height: 2.75rem;
-        background: #fee2e2;
-        color: #dc2626;
-        border-radius: 0.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-info {
-        flex: 1;
-    }
-    .modal-title {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.375rem;
-    }
-    .modal-description {
-        color: #64748b;
-        font-size: 0.875rem;
-        line-height: 1.5;
-    }
-    .modal-footer {
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.75rem;
-        border-top: 1px solid #e2e8f0;
-    }
-    .btn-modal {
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.15s;
-        border: 1px solid transparent;
-    }
-    .btn-modal-secondary {
-        background: white;
-        border-color: #e2e8f0;
-        color: #475569;
-    }
-    .btn-modal-secondary:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-    }
-    .btn-modal-danger {
-        background: #dc2626;
-        color: white;
-    }
-    .btn-modal-danger:hover {
-        background: #b91c1c;
-    }
-
-    /* Dark Mode */
-    .dark-mode .modal-content-delete {
-        background: #1e293b;
-        border-color: #334155;
-    }
-    .dark-mode .modal-inner { background: #1e293b; }
-    .dark-mode .modal-title { color: #f8fafc; }
-    .dark-mode .modal-description { color: #94a3b8; }
-    .dark-mode .modal-footer { background: #0f172a; border-color: #334155; }
-    .dark-mode .modal-icon-container { background: rgba(220, 38, 38, 0.1); }
-    .dark-mode .btn-modal-secondary { background: #1e293b; border-color: #334155; color: #f8fafc; }
-    .dark-mode .btn-modal-secondary:hover { background: #334155; }
-</style>
 @endsection
 
 @section('scripts')
@@ -292,47 +152,15 @@
         document.getElementById('positionModal').classList.remove('show');
     }
 
-    // Delete Modal Logic
-    function openDeleteModal(id, name) {
-        const modal = document.getElementById('delete-modal');
-        const form = document.getElementById('delete-form');
-        const nameDisplay = document.getElementById('delete-item-name');
-        
-        form.action = `/positions/${id}`; // Adjust based on your actual route
-        nameDisplay.textContent = name;
-        
-        modal.classList.add('show');
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('delete-modal').classList.remove('show');
-    }
-
     window.onclick = function(event) {
-        const addModal = document.getElementById('positionModal');
-        const deleteModal = document.getElementById('delete-modal');
-        if (event.target == addModal) closeModal();
-        if (event.target == deleteModal) closeDeleteModal();
+        const modal = document.getElementById('positionModal');
+        if (event.target == modal) closeModal();
     }
 
-    // Close on Escape key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
-            closeDeleteModal();
-        }
+        if (e.key === 'Escape') closeModal();
     });
 
-    @if(session('success'))
-        // new Notyf().success('{{ session('success') }}');
-    @endif
-    @if(session('error'))
-        // new Notyf().error('{{ session('error') }}');
-    @endif
-    
     @if($errors->any())
         document.addEventListener('DOMContentLoaded', () => openModal());
     @endif
